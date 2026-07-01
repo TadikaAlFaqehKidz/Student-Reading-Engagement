@@ -76,11 +76,6 @@
             display: block;
         }
 
-        @media (max-width: 768px) {
-            .divider { display: none; }
-            .top-controls { flex-direction: column; align-items: stretch; }
-        }
-
         /* Modern Scrollable Date Picker */
         .date-picker-wrapper { position: relative; }
         
@@ -88,7 +83,7 @@
             background-color: #f1f5f9; border: 1px solid var(--border-color);
             padding: 11px 20px; border-radius: var(--radius-md); font-size: 15px;
             font-weight: 600; color: var(--secondary); cursor: pointer;
-            display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: all 0.2s;
             white-space: nowrap;
         }
         .btn-datepicker:hover { background-color: #e2e8f0; }
@@ -104,7 +99,7 @@
         .scroll-picker-container {
             display: flex;
             gap: 10px;
-            height: 220px; /* Tinggi kotak skrol */
+            height: 220px;
         }
 
         .scroll-column {
@@ -116,7 +111,7 @@
             background: #f8fafc;
         }
 
-        /* Custom Scrollbar for nicer look */
+        /* Custom Scrollbar */
         .scroll-column::-webkit-scrollbar { width: 4px; }
         .scroll-column::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
@@ -152,10 +147,10 @@
         .btn-danger { background-color: var(--danger); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;}
         .btn-danger:hover { background-color: var(--danger-hover); }
 
-        /* Delete Student Button inside Table */
+        /* Delete Student Button */
         .btn-delete-student {
             background: #fee2e2; color: var(--danger); border: none; border-radius: 4px;
-            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s;
             flex-shrink: 0;
         }
@@ -172,17 +167,10 @@
         
         th { background-color: #f8fafc; color: var(--secondary); font-weight: 600; padding: 12px 6px; position: sticky; top: 0; z-index: 10; }
         
-        /* Ruang Nama Pendek dan Fit */
+        /* Sticky Name Column */
         td:first-child { 
-            position: sticky; 
-            left: 0; 
-            background-color: #ffffff; 
-            z-index: 5; 
-            font-weight: 600; 
-            padding: 10px 15px;
-            min-width: 140px; 
-            max-width: 180px; 
-            border-right: 2px solid var(--border-color); 
+            position: sticky; left: 0; background-color: #ffffff; z-index: 5; font-weight: 600; 
+            padding: 10px 15px; min-width: 140px; max-width: 180px; border-right: 2px solid var(--border-color); 
         }
         
         .student-name-wrapper {
@@ -203,7 +191,7 @@
         .day-letter { font-size: 11px; color: var(--primary); font-weight: 800; }
         .date-num { font-size: 14px; color: var(--secondary); }
 
-        /* Clickable Cell for Modal */
+        /* Clickable Cell */
         .cell-btn {
             width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; 
             cursor: pointer; display: flex; flex-direction: column; align-items: center; 
@@ -213,7 +201,7 @@
         .data-badge { font-size: 10px; font-weight: 700; color: var(--primary); background: #e0f2fe; padding: 2px 4px; border-radius: 4px; margin: 1px 0; width: 80%; }
         .data-badge.books { color: #059669; background: #d1fae5; }
 
-        /* Floating Modal / Screen */
+        /* Modal */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
@@ -221,9 +209,10 @@
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
-            background: white; width: 100%; max-width: 360px; padding: 24px; 
+            background: white; width: 90%; max-width: 360px; padding: 24px; 
             border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
             animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
         }
         @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
@@ -240,6 +229,45 @@
         .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 11px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight:600;}
         .btn-cancel:hover { background: #f1f5f9; }
 
+        /* ================= MOBILE RESPONSIVE TWEAKS ================= */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 10px; /* Kurangkan ruang keliling pada telefon */
+            }
+            header h1 {
+                font-size: 22px;
+            }
+            .card {
+                padding: 15px; /* Kad lebih padat */
+            }
+            .top-controls {
+                flex-direction: column; /* Susun ke bawah */
+                align-items: stretch; /* Penuhkan skrin */
+                gap: 12px;
+            }
+            .divider {
+                display: none; /* Buang garisan pembahagi */
+            }
+            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary {
+                width: 100%;
+                min-width: 0; /* Override min-width untuk elak terlebih skrin */
+                box-sizing: border-box;
+            }
+            .date-popover {
+                width: calc(100vw - 40px); /* Pop-up tarikh ikut lebar skrin telefon */
+                left: 50%;
+                transform: translateX(-50%); /* Center-kan pop-up */
+                top: 105%;
+            }
+            td:first-child, th:first-child {
+                min-width: 110px; /* Kurangkan sikit saiz lajur nama di telefon */
+                max-width: 140px;
+                padding: 10px;
+            }
+            .student-name-wrapper span {
+                font-size: 13px; /* Teks nama kecil sedikit */
+            }
+        }
     </style>
 </head>
 <body>
@@ -250,10 +278,8 @@
             <p>Official Institutional Record System (Auto-Save Enabled)</p>
         </header>
 
-        <!-- Inline Top Controls -->
         <div class="card top-controls">
             
-            <!-- Scrollable Date Picker -->
             <div class="date-picker-wrapper" id="datePickerContainer">
                 <button class="btn-datepicker" onclick="toggleDatePicker(event)">
                     <span id="displayDate">January 2026</span>
@@ -263,9 +289,7 @@
                 <div class="date-popover" id="datePopover">
                     <div style="font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; text-align: center;">Select Month & Year</div>
                     <div class="scroll-picker-container">
-                        <!-- Column for Months -->
                         <div class="scroll-column" id="monthScrollList"></div>
-                        <!-- Column for Years (2026 ke atas) -->
                         <div class="scroll-column" id="yearScrollList"></div>
                     </div>
                 </div>
@@ -273,13 +297,11 @@
 
             <div class="divider"></div>
 
-            <!-- Add Student -->
             <input type="text" id="studentName" placeholder="Enter student name...">
             <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
             
         </div>
 
-        <!-- Table Container -->
         <div class="table-container">
             <table id="readingTable">
                 <thead><tr id="tableHeader"></tr></thead>
@@ -288,7 +310,6 @@
         </div>
     </div>
 
-    <!-- Floated Screen (Modal) -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -323,7 +344,7 @@
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         
-        // Pastikan currentYear tidak kurang dari 2026 jika masa peranti tidak tepat
+        // Pastikan currentYear tidak kurang dari 2026
         if (currentYear < 2026) currentYear = 2026; 
 
         let totalDays = 0;
@@ -351,7 +372,6 @@
             document.getElementById('datePopover').classList.toggle('active');
         }
 
-        // Close Popover strictly when clicking outside of it
         document.addEventListener('click', function(event) {
             const container = document.getElementById('datePickerContainer');
             if (!container.contains(event.target)) {
@@ -373,9 +393,9 @@
                 div.innerText = month.substring(0, 3);
                 div.onclick = function() {
                     currentMonth = index;
-                    buildScrollPicker(); // Re-render to update active class
+                    buildScrollPicker();
                     updateDatePickerUI();
-                    generateGrid(); // AUTO LOAD
+                    generateGrid();
                 };
                 monthList.appendChild(div);
             });
@@ -387,9 +407,9 @@
                 div.innerText = y;
                 div.onclick = function() {
                     currentYear = y;
-                    buildScrollPicker(); // Re-render to update active class
+                    buildScrollPicker(); 
                     updateDatePickerUI();
-                    generateGrid(); // AUTO LOAD
+                    generateGrid();
                 };
                 yearList.appendChild(div);
             }
@@ -408,7 +428,6 @@
             tableHeader.innerHTML = '';
             tableBody.innerHTML = '';
 
-            // Build Header
             let thName = document.createElement('th');
             thName.innerText = 'Student Name';
             tableHeader.appendChild(thName);
@@ -426,7 +445,6 @@
                 tableHeader.appendChild(thDay);
             }
 
-            // Build Rows from DB
             appDatabase.students.forEach(studentName => {
                 createStudentRow(studentName, tableBody);
             });
@@ -443,30 +461,22 @@
                 return;
             }
 
-            // Save to DB
             appDatabase.students.push(nameValue);
             appDatabase.records[nameValue] = {};
             saveToLocalStorage();
 
-            // Refresh Grid
             generateGrid();
 
             nameInput.value = '';
             nameInput.focus();
         }
 
-        // ================= DELETE STUDENT FUNCTION =================
         function removeStudent(studentName) {
             const confirmDelete = confirm(`Are you sure you want to delete all records for "${studentName}"?`);
             
             if (confirmDelete) {
-                // Remove from students array
                 appDatabase.students = appDatabase.students.filter(name => name !== studentName);
-                
-                // Delete their records from object
                 delete appDatabase.records[studentName];
-                
-                // Save & Refresh
                 saveToLocalStorage();
                 generateGrid();
             }
@@ -474,10 +484,8 @@
 
         function createStudentRow(studentName, tableBody) {
             const tr = document.createElement('tr');
-
             let tdName = document.createElement('td');
             
-            // Flex container inside the TD to hold Name and Delete Button
             tdName.innerHTML = `
                 <div class="student-name-wrapper">
                     <span>${studentName}</span>
@@ -486,7 +494,6 @@
             `;
             tr.appendChild(tdName);
 
-            // Generate Date Cells
             for (let i = 1; i <= totalDays; i++) {
                 let tdDay = document.createElement('td');
                 let cellBtn = document.createElement('button');
