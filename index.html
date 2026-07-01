@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Reading Record System</title>
+    <style>
+        /* Modern Institutional Design Tokens */
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --secondary: #0f172a;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Arial", sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        header h1 {
+            color: var(--secondary);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+        header p { color: var(--text-muted); margin: 0; font-size: 15px; }
+
+        .card {
+            background: var(--bg-card);
+            padding: 20px 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        /* Top Controls: Inline Layout */
+        .top-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .divider {
+            width: 1px;
+            height: 35px;
+            background-color: var(--border-color);
+            margin: 0 5px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .divider { display: none; }
+            .top-controls { flex-direction: column; align-items: stretch; }
+        }
+
+        /* Modern Scrollable Date Picker */
+        .date-picker-wrapper { position: relative; }
+        
+        .btn-datepicker {
+            background-color: #f1f5f9; border: 1px solid var(--border-color);
+            padding: 11px 20px; border-radius: var(--radius-md); font-size: 15px;
+            font-weight: 600; color: var(--secondary); cursor: pointer;
+            display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-datepicker:hover { background-color: #e2e8f0; }
+
+        .date-popover {
+            display: none; position: absolute; top: 115%; left: 0;
+            background: white; border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-xl);
+            padding: 15px; z-index: 100; width: 280px;
+        }
+        .date-popover.active { display: block; }
+
+        .scroll-picker-container {
+            display: flex;
+            gap: 10px;
+            height: 220px; /* Tinggi kotak skrol */
+        }
+
+        .scroll-column {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 5px;
+            background: #f8fafc;
+        }
+
+        /* Custom Scrollbar for nicer look */
+        .scroll-column::-webkit-scrollbar { width: 4px; }
+        .scroll-column::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .scroll-item {
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            transition: all 0.15s;
+        }
+        
+        .scroll-item:hover { background-color: #e2e8f0; }
+        .scroll-item.active { background-color: var(--primary); color: white; font-weight: bold; }
+
+        /* Buttons & Inputs */
+        input[type="text"], input[type="number"] {
+            padding: 11px 16px; border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); font-size: 14px; outline: none; 
+            transition: all 0.2s; min-width: 250px; flex-grow: 1; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+        .btn-primary {
+            background-color: var(--primary); color: white; border: none; padding: 11px 20px; 
+            border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600;
+            box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+
+        .btn-danger { background-color: var(--danger); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;}
+        .btn-danger:hover { background-color: var(--danger-hover); }
+
+        /* Delete Student Button inside Table */
+        .btn-delete-student {
+            background: #fee2e2; color: var(--danger); border: none; border-radius: 4px;
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-delete-student:hover { background: var(--danger); color: white; }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto; overflow-y: auto; max-height: 65vh;
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md); border: 1px solid var(--border-color);
+        }
+        table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1200px; }
+        th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid #f1f5f9; padding: 0; text-align: center; }
+        
+        th { background-color: #f8fafc; color: var(--secondary); font-weight: 600; padding: 12px 6px; position: sticky; top: 0; z-index: 10; }
+        
+        /* Ruang Nama Pendek dan Fit */
+        td:first-child { 
+            position: sticky; 
+            left: 0; 
+            background-color: #ffffff; 
+            z-index: 5; 
+            font-weight: 600; 
+            padding: 10px 15px;
+            min-width: 140px; 
+            max-width: 180px; 
+            border-right: 2px solid var(--border-color); 
+        }
+        
+        .student-name-wrapper {
+            display: flex; justify-content: space-between; align-items: center; gap: 8px;
+            width: 100%; text-align: left; word-wrap: break-word; white-space: normal;
+        }
+
+        th:first-child { 
+            position: sticky; left: 0; top: 0; background-color: #f8fafc; z-index: 20; 
+            padding: 12px 15px; min-width: 140px; max-width: 180px;
+            text-align: left; border-right: 2px solid var(--border-color); 
+        }
+        
+        tr:hover td { background-color: #f8fafc; }
+        tr:hover td:first-child { background-color: #f1f5f9; }
+
+        .header-day { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .day-letter { font-size: 11px; color: var(--primary); font-weight: 800; }
+        .date-num { font-size: 14px; color: var(--secondary); }
+
+        /* Clickable Cell for Modal */
+        .cell-btn {
+            width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; 
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; transition: background 0.2s; padding: 2px; box-shadow: none;
+        }
+        .cell-btn:hover { background: #eff6ff; }
+        .data-badge { font-size: 10px; font-weight: 700; color: var(--primary); background: #e0f2fe; padding: 2px 4px; border-radius: 4px; margin: 1px 0; width: 80%; }
+        .data-badge.books { color: #059669; background: #d1fae5; }
+
+        /* Floating Modal / Screen */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            z-index: 9999; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: white; width: 100%; max-width: 360px; padding: 24px; 
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .modal-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .modal-header h3 { margin: 0 0 5px 0; font-size: 18px; color: var(--secondary); }
+        .modal-header p { margin: 0; font-size: 14px; color: var(--primary); font-weight: 600; }
+        
+        .modal-body .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;}
+        .modal-body .input-group label { font-size: 14px; font-weight: 600; color: var(--secondary); }
+        .modal-body input { width: 100%; }
+        
+        .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px;}
+        .modal-footer .right-btns { display: flex; gap: 10px; }
+        .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 11px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight:600;}
+        .btn-cancel:hover { background: #f1f5f9; }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <h1>Student Reading Engagement Tracker</h1>
+            <p>Official Institutional Record System (Auto-Save Enabled)</p>
+        </header>
+
+        <!-- Inline Top Controls -->
+        <div class="card top-controls">
+            
+            <!-- Scrollable Date Picker -->
+            <div class="date-picker-wrapper" id="datePickerContainer">
+                <button class="btn-datepicker" onclick="toggleDatePicker(event)">
+                    <span id="displayDate">January 2026</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                
+                <div class="date-popover" id="datePopover">
+                    <div style="font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; text-align: center;">Select Month & Year</div>
+                    <div class="scroll-picker-container">
+                        <!-- Column for Months -->
+                        <div class="scroll-column" id="monthScrollList"></div>
+                        <!-- Column for Years (2026 ke atas) -->
+                        <div class="scroll-column" id="yearScrollList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Add Student -->
+            <input type="text" id="studentName" placeholder="Enter student name...">
+            <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
+            
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <table id="readingTable">
+                <thead><tr id="tableHeader"></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Floated Screen (Modal) -->
+    <div class="modal-overlay" id="dataModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalStudentName">Student Name</h3>
+                <p id="modalDateInfo">Date</p>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="inputPages">Pages Read (Numbers Only)</label>
+                    <input type="number" id="inputPages" placeholder="0" min="0">
+                </div>
+                <div class="input-group">
+                    <label for="inputBooks">Books Completed (Numbers Only)</label>
+                    <input type="number" id="inputBooks" placeholder="0" min="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-danger" onclick="clearModalData()">Clear Data</button>
+                <div class="right-btns">
+                    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveModalData()">Save Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data & Variables
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const dayLetters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        
+        // Pastikan currentYear tidak kurang dari 2026 jika masa peranti tidak tepat
+        if (currentYear < 2026) currentYear = 2026; 
+
+        let totalDays = 0;
+        let activeCell = null; 
+
+        // ================= DATABASE (LOCAL STORAGE) =================
+        let appDatabase = JSON.parse(localStorage.getItem('readingSystemData')) || {
+            students: [],
+            records: {}
+        };
+
+        function saveToLocalStorage() {
+            localStorage.setItem('readingSystemData', JSON.stringify(appDatabase));
+        }
+
+        // ================= INIT =================
+        window.onload = function() {
+            buildScrollPicker();
+            updateDatePickerUI();
+            generateGrid();
+        };
+
+        // ================= SCROLLABLE DATE PICKER =================
+        function toggleDatePicker(event) {
+            document.getElementById('datePopover').classList.toggle('active');
+        }
+
+        // Close Popover strictly when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('datePickerContainer');
+            if (!container.contains(event.target)) {
+                document.getElementById('datePopover').classList.remove('active');
+            }
+        });
+
+        function buildScrollPicker() {
+            const monthList = document.getElementById('monthScrollList');
+            const yearList = document.getElementById('yearScrollList');
+            
+            monthList.innerHTML = '';
+            yearList.innerHTML = '';
+
+            // Generate Months
+            monthNames.forEach((month, index) => {
+                let div = document.createElement('div');
+                div.className = `scroll-item ${index === currentMonth ? 'active' : ''}`;
+                div.innerText = month.substring(0, 3);
+                div.onclick = function() {
+                    currentMonth = index;
+                    buildScrollPicker(); // Re-render to update active class
+                    updateDatePickerUI();
+                    generateGrid(); // AUTO LOAD
+                };
+                monthList.appendChild(div);
+            });
+
+            // Generate Years (2026 to 2035)
+            for (let y = 2026; y <= 2035; y++) {
+                let div = document.createElement('div');
+                div.className = `scroll-item ${y === currentYear ? 'active' : ''}`;
+                div.innerText = y;
+                div.onclick = function() {
+                    currentYear = y;
+                    buildScrollPicker(); // Re-render to update active class
+                    updateDatePickerUI();
+                    generateGrid(); // AUTO LOAD
+                };
+                yearList.appendChild(div);
+            }
+        }
+
+        function updateDatePickerUI() {
+            document.getElementById('displayDate').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+        }
+
+        // ================= GRID GENERATION =================
+        function generateGrid() {
+            totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Build Header
+            let thName = document.createElement('th');
+            thName.innerText = 'Student Name';
+            tableHeader.appendChild(thName);
+
+            for (let i = 1; i <= totalDays; i++) {
+                let dateObj = new Date(currentYear, currentMonth, i);
+                let dayIndex = dateObj.getDay(); 
+                let thDay = document.createElement('th');
+                thDay.innerHTML = `
+                    <div class="header-day">
+                        <span class="day-letter">${dayLetters[dayIndex]}</span>
+                        <span class="date-num">${i}</span>
+                    </div>
+                `;
+                tableHeader.appendChild(thDay);
+            }
+
+            // Build Rows from DB
+            appDatabase.students.forEach(studentName => {
+                createStudentRow(studentName, tableBody);
+            });
+        }
+
+        function addStudent() {
+            const nameInput = document.getElementById('studentName');
+            const nameValue = nameInput.value.trim();
+            
+            if (nameValue === "") { alert("Please enter a valid student name."); return; }
+            
+            if (appDatabase.students.includes(nameValue)) {
+                alert("Student already exists in the system.");
+                return;
+            }
+
+            // Save to DB
+            appDatabase.students.push(nameValue);
+            appDatabase.records[nameValue] = {};
+            saveToLocalStorage();
+
+            // Refresh Grid
+            generateGrid();
+
+            nameInput.value = '';
+            nameInput.focus();
+        }
+
+        // ================= DELETE STUDENT FUNCTION =================
+        function removeStudent(studentName) {
+            const confirmDelete = confirm(`Are you sure you want to delete all records for "${studentName}"?`);
+            
+            if (confirmDelete) {
+                // Remove from students array
+                appDatabase.students = appDatabase.students.filter(name => name !== studentName);
+                
+                // Delete their records from object
+                delete appDatabase.records[studentName];
+                
+                // Save & Refresh
+                saveToLocalStorage();
+                generateGrid();
+            }
+        }
+
+        function createStudentRow(studentName, tableBody) {
+            const tr = document.createElement('tr');
+
+            let tdName = document.createElement('td');
+            
+            // Flex container inside the TD to hold Name and Delete Button
+            tdName.innerHTML = `
+                <div class="student-name-wrapper">
+                    <span>${studentName}</span>
+                    <button class="btn-delete-student" onclick="removeStudent('${studentName}')" title="Delete Student">×</button>
+                </div>
+            `;
+            tr.appendChild(tdName);
+
+            // Generate Date Cells
+            for (let i = 1; i <= totalDays; i++) {
+                let tdDay = document.createElement('td');
+                let cellBtn = document.createElement('button');
+                cellBtn.className = 'cell-btn';
+                
+                const dateKey = `${currentYear}-${currentMonth}-${i}`;
+                
+                let savedPages = '';
+                let savedBooks = '';
+                if (appDatabase.records[studentName] && appDatabase.records[studentName][dateKey]) {
+                    savedPages = appDatabase.records[studentName][dateKey].pages || '';
+                    savedBooks = appDatabase.records[studentName][dateKey].books || '';
+                }
+
+                cellBtn.dataset.student = studentName;
+                cellBtn.dataset.day = i;
+                cellBtn.dataset.datekey = dateKey;
+                cellBtn.dataset.pages = savedPages;
+                cellBtn.dataset.books = savedBooks;
+
+                renderCellBadges(cellBtn, savedPages, savedBooks);
+
+                cellBtn.onclick = function() { openModal(this); };
+                tdDay.appendChild(cellBtn);
+                tr.appendChild(tdDay);
+            }
+            tableBody.appendChild(tr);
+        }
+
+        function renderCellBadges(cellBtn, pages, books) {
+            cellBtn.innerHTML = ''; 
+            if(pages && pages > 0) {
+                cellBtn.innerHTML += `<div class="data-badge">P: ${pages}</div>`;
+            }
+            if(books && books > 0) {
+                cellBtn.innerHTML += `<div class="data-badge books">B: ${books}</div>`;
+            }
+        }
+
+        // ================= MODAL LOGIC =================
+        function openModal(buttonElement) {
+            activeCell = buttonElement;
+            const student = activeCell.dataset.student;
+            const day = activeCell.dataset.day;
+            const fullDateStr = `${day} ${monthNames[currentMonth]} ${currentYear}`;
+
+            document.getElementById('modalStudentName').innerText = student;
+            document.getElementById('modalDateInfo').innerText = fullDateStr;
+            
+            document.getElementById('inputPages').value = activeCell.dataset.pages;
+            document.getElementById('inputBooks').value = activeCell.dataset.books;
+
+            document.getElementById('dataModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('dataModal').classList.remove('active');
+            activeCell = null;
+        }
+
+        function saveModalData() {
+            if (!activeCell) return;
+
+            const student = activeCell.dataset.student;
+            const dateKey = activeCell.dataset.datekey;
+            const pages = document.getElementById('inputPages').value;
+            const books = document.getElementById('inputBooks').value;
+
+            activeCell.dataset.pages = pages;
+            activeCell.dataset.books = books;
+
+            if (!appDatabase.records[student]) appDatabase.records[student] = {};
+            appDatabase.records[student][dateKey] = { pages: pages, books: books };
+            saveToLocalStorage();
+
+            renderCellBadges(activeCell, pages, books);
+            closeModal();
+        }
+
+        function clearModalData() {
+            if (!activeCell) return;
+            
+            const student = activeCell.dataset.student;
+            const dateKey = activeCell.dataset.datekey;
+
+            if (appDatabase.records[student] && appDatabase.records[student][dateKey]) {
+                delete appDatabase.records[student][dateKey];
+                saveToLocalStorage();
+            }
+
+            activeCell.dataset.pages = '';
+            activeCell.dataset.books = '';
+            renderCellBadges(activeCell, '', '');
+            
+            closeModal();
+        }
+    </script>
+</body>
+</html>
