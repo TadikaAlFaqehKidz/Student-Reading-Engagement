@@ -17,7 +17,7 @@
             --text-muted: #64748b;
             --danger: #ef4444;
             --danger-hover: #dc2626;
-            --iqra-color: #d97706; /* Warna khas untuk Iqra */
+            --iqra-color: #d97706; 
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -35,42 +35,23 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .wrapper { max-width: 1400px; margin: 0 auto; }
 
-        header {
-            margin-bottom: 25px;
-            text-align: center;
-            position: relative;
-        }
-        header h1 {
-            color: var(--secondary);
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 8px 0;
-        }
+        header { margin-bottom: 25px; text-align: center; position: relative; }
+        header h1 { color: var(--secondary); font-size: 28px; font-weight: 700; margin: 0 0 8px 0; }
         header p { color: var(--text-muted); margin: 0; font-size: 15px; }
 
         .btn-back {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white; border: 1px solid var(--border-color);
-            padding: 8px 15px; border-radius: var(--radius-md); cursor: pointer;
-            font-weight: 600; color: var(--secondary); box-shadow: var(--shadow-sm);
+            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            background: white; border: 1px solid var(--border-color); padding: 8px 15px; 
+            border-radius: var(--radius-md); cursor: pointer; font-weight: 600; 
+            color: var(--secondary); box-shadow: var(--shadow-sm);
         }
         .btn-back:hover { background: #f1f5f9; }
 
         .card {
-            background: var(--bg-card);
-            padding: 20px 24px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
+            background: var(--bg-card); padding: 20px 24px; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md); border: 1px solid var(--border-color); margin-bottom: 25px;
         }
 
         /* Dashboard / Choice Cards */
@@ -89,23 +70,20 @@
         .choice-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
         .choice-card.reading:hover { border-color: var(--primary); }
         .choice-card.iqra:hover { border-color: var(--iqra-color); }
-        
         .choice-card .icon { font-size: 40px; margin-bottom: 15px; }
         .choice-card h2 { margin: 0 0 10px 0; font-size: 22px; color: var(--secondary); }
         .choice-card p { margin: 0; color: var(--text-muted); font-size: 15px; }
 
-        /* Top Controls: Inline Layout */
+        /* Top Controls */
         .top-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; }
         .divider { width: 1px; height: 35px; background-color: var(--border-color); margin: 0 5px; display: block; }
 
-        /* Modern Scrollable Date Picker */
         .date-picker-wrapper { position: relative; }
         .btn-datepicker {
-            background-color: #f1f5f9; border: 1px solid var(--border-color);
-            padding: 11px 20px; border-radius: var(--radius-md); font-size: 15px;
-            font-weight: 600; color: var(--secondary); cursor: pointer;
-            display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: all 0.2s;
-            white-space: nowrap;
+            background-color: #f1f5f9; border: 1px solid var(--border-color); padding: 11px 20px; 
+            border-radius: var(--radius-md); font-size: 15px; font-weight: 600; color: var(--secondary); 
+            cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+            transition: all 0.2s; white-space: nowrap;
         }
         .btn-datepicker:hover { background-color: #e2e8f0; }
 
@@ -139,6 +117,13 @@
         }
         .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
 
+        .btn-secondary {
+            background-color: white; color: var(--secondary); border: 1px solid var(--border-color);
+            padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px;
+            font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+
         .btn-danger { background-color: var(--danger); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;}
         .btn-danger:hover { background-color: var(--danger-hover); }
 
@@ -169,7 +154,6 @@
         .day-letter { font-size: 11px; color: var(--primary); font-weight: 800; }
         .date-num { font-size: 14px; color: var(--secondary); }
 
-        /* Clickable Cell */
         .cell-btn {
             width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.2s; padding: 2px; box-shadow: none;
         }
@@ -193,11 +177,9 @@
         .modal-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .modal-header h3 { margin: 0 0 5px 0; font-size: 18px; color: var(--secondary); }
         .modal-header p { margin: 0; font-size: 14px; color: var(--primary); font-weight: 600; }
-        
         .modal-body .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;}
         .modal-body .input-group label { font-size: 14px; font-weight: 600; color: var(--secondary); }
         .modal-body input { width: 100%; }
-        
         .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px;}
         .modal-footer .right-btns { display: flex; gap: 10px; }
         .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 11px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight:600;}
@@ -206,21 +188,68 @@
         /* ================= MOBILE RESPONSIVE TWEAKS ================= */
         @media (max-width: 768px) {
             body { padding: 15px 10px; }
-            header h1 { font-size: 20px; margin-top: 40px; }
-            .btn-back { top: 0; transform: none; width: 100%; text-align: center; }
+            header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+            header h1 { font-size: 22px; margin-top: 10px; margin-bottom: 5px; }
+            .btn-back { position: relative; top: auto; transform: none; width: auto; padding: 8px 20px; }
             .card { padding: 15px; }
             .top-controls { flex-direction: column; align-items: stretch; gap: 12px; }
             .divider { display: none; }
-            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary { width: 100%; min-width: 0; box-sizing: border-box; }
+            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary, .btn-secondary { width: 100%; min-width: 0; box-sizing: border-box; justify-content: center;}
             .date-popover { width: calc(100vw - 40px); left: 50%; transform: translateX(-50%); top: 105%; }
             td:first-child, th:first-child { min-width: 110px; max-width: 140px; padding: 10px; }
             .student-name-wrapper span { font-size: 13px; }
+        }
+
+        /* ================= KOD CETAKAN PDF (PRINT/PDF CSS) ================= */
+        @media print {
+            /* Sembunyikan elemen UI yang tak diperlukan untuk PDF */
+            .top-controls, .btn-back, .btn-delete-student, .modal-overlay { display: none !important; }
+            
+            body { background: white; padding: 0; margin: 0; font-size: 10pt; }
+            header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
+            header p { font-size: 12pt; color: #333; margin-bottom: 20px; }
+            
+            /* Bebaskan jadual dari kotak & membenarkan jadual penuh */
+            .table-container { 
+                max-height: none !important; 
+                overflow: visible !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+            }
+            .wrapper { max-width: 100%; width: 100%; }
+            
+            /* Gaya jadual khas PDF */
+            table { width: 100%; border-collapse: collapse; min-width: auto; }
+            th, td { 
+                border: 1px solid #000 !important; 
+                padding: 4px !important; 
+                color: black !important; 
+            }
+            th { 
+                background-color: #f0f0f0 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                position: static; /* Buang sticky semasa PDF */
+            }
+            td:first-child, th:first-child { 
+                position: static; border-right: 1px solid #000 !important; 
+                min-width: auto; max-width: none; background-color: white !important;
+            }
+            
+            /* Kemaskan lencana/data dalam jadual PDF */
+            .cell-btn { min-height: 25px; padding: 0; }
+            .data-badge { 
+                border: 1px solid #000; background: transparent !important; 
+                color: black !important; font-size: 8pt; margin: 1px auto; width: 90%;
+            }
+
+            /* Tetapkan saiz kertas PDF Landscape secara automatik */
+            @page { size: A4 landscape; margin: 10mm; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. WELCOME SCREEN (Force Name Entry) -->
     <div class="modal-overlay" id="welcomeScreen" style="z-index: 10000; background: rgba(15,23,42,0.95);">
         <div class="modal-box" style="text-align: center;">
             <h2 style="color: var(--secondary); margin-top: 0; font-size: 24px;">Welcome! 👋</h2>
@@ -233,7 +262,6 @@
         </div>
     </div>
 
-    <!-- 2. HOME SCREEN (Menu Selection) -->
     <div id="homeScreen" class="wrapper home-container" style="display: none;">
         <div>
             <h1 class="home-title" id="welcomeHeader">Welcome, Teacher</h1>
@@ -241,14 +269,12 @@
         </div>
         
         <div class="cards-wrapper">
-            <!-- Reading Record Card -->
             <div class="choice-card reading" onclick="openApp('reading')">
                 <div class="icon">📚</div>
                 <h2>Reading Book Record</h2>
                 <p>Manage pages read and storybooks completed by your students.</p>
             </div>
             
-            <!-- Iqra Record Card -->
             <div class="choice-card iqra" onclick="openApp('iqra')">
                 <div class="icon">📖</div>
                 <h2>Iqra Recite Record</h2>
@@ -257,7 +283,6 @@
         </div>
     </div>
 
-    <!-- 3. MAIN APP SCREEN (Table & Controls) -->
     <div id="appScreen" class="wrapper" style="display: none;">
         <header>
             <button class="btn-back" onclick="goHome()">← Main Menu</button>
@@ -265,9 +290,7 @@
             <p id="mainAppDesc">Official Institutional Record System</p>
         </header>
 
-        <!-- Top Controls -->
         <div class="card top-controls">
-            <!-- Scrollable Date Picker -->
             <div class="date-picker-wrapper" id="datePickerContainer">
                 <button class="btn-datepicker" onclick="toggleDatePicker(event)">
                     <span id="displayDate">January 2026</span>
@@ -282,14 +305,17 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
-
-            <!-- Add Student -->
             <input type="text" id="studentName" placeholder="Enter student name...">
             <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
+
+            <div class="divider"></div>
+
+            <button type="button" class="btn-secondary" onclick="exportPDF()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Export PDF
+            </button>
         </div>
 
-        <!-- Table Container -->
         <div class="table-container">
             <table id="readingTable">
                 <thead><tr id="tableHeader"></tr></thead>
@@ -298,7 +324,6 @@
         </div>
     </div>
 
-    <!-- Floated Screen (Modal) for Data Entry -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -336,15 +361,14 @@
 
         let totalDays = 0;
         let activeCell = null; 
-        let currentMode = 'reading'; // 'reading' atau 'iqra'
+        let currentMode = 'reading'; 
 
-        // ================= DATABASE (LOCAL STORAGE) DENGAN PENGASINGAN =================
+        // ================= DATABASE (LOCAL STORAGE) =================
         let rawData = localStorage.getItem('studentSystemData');
         let appDatabase;
         
         if (rawData) {
             appDatabase = JSON.parse(rawData);
-            // Backward compatibility jika guna kod versi lama
             if (appDatabase.students && Array.isArray(appDatabase.students)) {
                 let oldStudents = appDatabase.students;
                 let oldRecords = appDatabase.records;
@@ -356,7 +380,6 @@
                 saveToLocalStorage();
             }
         } else {
-            // Pangkalan data baharu
             appDatabase = {
                 teacherName: "",
                 reading: { students: [], records: {} },
@@ -371,21 +394,17 @@
         // ================= INIT APP =================
         window.onload = function() {
             if (!appDatabase.teacherName) {
-                // Tunjuk popup welcome jika nama belum ada
                 document.getElementById('welcomeScreen').classList.add('active');
             } else {
-                // Tunjuk menu utama
                 showHomeScreen();
             }
         };
 
         // ================= TEACHER NAME LOGIC =================
         function enforceTeacherPrefix(input) {
-            // Pastikan perkataan "Teacher " sentiasa ada di hadapan
             if (!input.value.startsWith("Teacher ")) {
                 input.value = "Teacher ";
             }
-            // Auto Caps untuk huruf pertama selepas "Teacher "
             let namePart = input.value.substring(8);
             if (namePart.length > 0) {
                 input.value = "Teacher " + namePart.charAt(0).toUpperCase() + namePart.slice(1);
@@ -395,11 +414,7 @@
         function saveTeacherName() {
             const inputVal = document.getElementById('teacherNameInput').value;
             const nameOnly = inputVal.substring(8).trim();
-            
-            if (nameOnly === "") {
-                alert("Please enter your name after 'Teacher'.");
-                return;
-            }
+            if (nameOnly === "") { alert("Please enter your name after 'Teacher'."); return; }
             
             appDatabase.teacherName = inputVal;
             saveToLocalStorage();
@@ -421,21 +436,23 @@
             document.getElementById('homeScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'block';
 
-            // Tukar Tajuk & Label Modal berdasarkan modul yang dipilih
             const mainTitle = document.getElementById('mainAppTitle');
+            const mainDesc = document.getElementById('mainAppDesc');
             const lbl1 = document.getElementById('lblInput1');
             const lbl2 = document.getElementById('lblInput2');
 
             if(mode === 'reading') {
                 mainTitle.innerText = "Reading Book Record";
+                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
                 lbl1.innerText = "Pages Read (Numbers Only)";
                 lbl2.innerText = "Books Completed (Numbers Only)";
-                document.documentElement.style.setProperty('--primary', '#3b82f6'); // Biru
+                document.documentElement.style.setProperty('--primary', '#3b82f6');
             } else {
                 mainTitle.innerText = "Iqra Recite Record";
+                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
                 lbl1.innerText = "Iqra Volume / Jilid (1-6)";
                 lbl2.innerText = "Page Number (Numbers Only)";
-                document.documentElement.style.setProperty('--primary', '#d97706'); // Oren Iqra
+                document.documentElement.style.setProperty('--primary', '#d97706'); 
             }
 
             buildScrollPicker();
@@ -447,16 +464,26 @@
             showHomeScreen();
         }
 
-        // ================= SCROLLABLE DATE PICKER =================
-        function toggleDatePicker(event) {
-            document.getElementById('datePopover').classList.toggle('active');
+        // ================= EXPORT PDF / PRINT =================
+        function exportPDF() {
+            // Update tajuk seketika untuk paparan PDF (tambah nama bulan/tahun)
+            const oldDesc = document.getElementById('mainAppDesc').innerText;
+            const currentPeriod = document.getElementById('displayDate').innerText;
+            document.getElementById('mainAppDesc').innerText = `${oldDesc} | Period: ${currentPeriod}`;
+            
+            // Panggil fungsi print browser
+            window.print();
+            
+            // Kembalikan tajuk asal
+            document.getElementById('mainAppDesc').innerText = oldDesc;
         }
+
+        // ================= SCROLLABLE DATE PICKER =================
+        function toggleDatePicker(event) { document.getElementById('datePopover').classList.toggle('active'); }
 
         document.addEventListener('click', function(event) {
             const container = document.getElementById('datePickerContainer');
-            if (!container.contains(event.target)) {
-                document.getElementById('datePopover').classList.remove('active');
-            }
+            if (!container.contains(event.target)) { document.getElementById('datePopover').classList.remove('active'); }
         });
 
         function buildScrollPicker() {
@@ -523,7 +550,6 @@
                 tableHeader.appendChild(thDay);
             }
 
-            // Muatkan senarai pelajar berdasarkan modul aktif (reading atau iqra)
             appDatabase[currentMode].students.forEach(studentName => {
                 createStudentRow(studentName, tableBody);
             });
@@ -534,25 +560,19 @@
             const nameValue = nameInput.value.trim();
             
             if (nameValue === "") { alert("Please enter a valid student name."); return; }
-            
-            if (appDatabase[currentMode].students.includes(nameValue)) {
-                alert("Student already exists in this record.");
-                return;
-            }
+            if (appDatabase[currentMode].students.includes(nameValue)) { alert("Student already exists in this record."); return; }
 
             appDatabase[currentMode].students.push(nameValue);
             appDatabase[currentMode].records[nameValue] = {};
             saveToLocalStorage();
 
             generateGrid();
-
             nameInput.value = '';
             nameInput.focus();
         }
 
         function removeStudent(studentName) {
             const confirmDelete = confirm(`Are you sure you want to delete "${studentName}" from this record?`);
-            
             if (confirmDelete) {
                 appDatabase[currentMode].students = appDatabase[currentMode].students.filter(name => name !== studentName);
                 delete appDatabase[currentMode].records[studentName];
@@ -605,12 +625,10 @@
 
         function renderCellBadges(cellBtn, val1, val2) {
             cellBtn.innerHTML = ''; 
-            
             if (currentMode === 'reading') {
                 if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
                 if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
             } else {
-                // Gaya khas untuk IQRA
                 if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
                 if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
             }
@@ -632,14 +650,10 @@
             document.getElementById('dataModal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('dataModal').classList.remove('active');
-            activeCell = null;
-        }
+        function closeModal() { document.getElementById('dataModal').classList.remove('active'); activeCell = null; }
 
         function saveModalData() {
             if (!activeCell) return;
-
             const student = activeCell.dataset.student;
             const dateKey = activeCell.dataset.datekey;
             const val1 = document.getElementById('inputValue1').value;
@@ -658,7 +672,6 @@
 
         function clearModalData() {
             if (!activeCell) return;
-            
             const student = activeCell.dataset.student;
             const dateKey = activeCell.dataset.datekey;
 
@@ -670,7 +683,6 @@
             activeCell.dataset.val1 = '';
             activeCell.dataset.val2 = '';
             renderCellBadges(activeCell, '', '');
-            
             closeModal();
         }
     </script>
