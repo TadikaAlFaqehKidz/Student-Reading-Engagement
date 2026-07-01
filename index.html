@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Reading Record System</title>
+    <title>Student Record System</title>
     <style>
         /* Modern Institutional Design Tokens */
         :root {
@@ -17,6 +17,7 @@
             --text-muted: #64748b;
             --danger: #ef4444;
             --danger-hover: #dc2626;
+            --iqra-color: #d97706; /* Warna khas untuk Iqra */
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -28,7 +29,7 @@
         body {
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Arial", sans-serif;
             margin: 0;
-            padding: 30px 20px;
+            padding: 20px;
             background-color: var(--bg-main);
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
@@ -42,6 +43,7 @@
         header {
             margin-bottom: 25px;
             text-align: center;
+            position: relative;
         }
         header h1 {
             color: var(--secondary);
@@ -50,6 +52,17 @@
             margin: 0 0 8px 0;
         }
         header p { color: var(--text-muted); margin: 0; font-size: 15px; }
+
+        .btn-back {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white; border: 1px solid var(--border-color);
+            padding: 8px 15px; border-radius: var(--radius-md); cursor: pointer;
+            font-weight: 600; color: var(--secondary); box-shadow: var(--shadow-sm);
+        }
+        .btn-back:hover { background: #f1f5f9; }
 
         .card {
             background: var(--bg-card);
@@ -60,25 +73,33 @@
             margin-bottom: 25px;
         }
 
-        /* Top Controls: Inline Layout */
-        .top-controls {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
+        /* Dashboard / Choice Cards */
+        .home-container {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 80vh; gap: 30px; text-align: center;
         }
+        .home-title { font-size: 32px; color: var(--secondary); margin: 0; }
+        .home-subtitle { font-size: 16px; color: var(--text-muted); margin: 0; }
+        
+        .cards-wrapper { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
+        .choice-card {
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: 40px 20px; width: 100%; max-width: 350px;
+            box-shadow: var(--shadow-md); border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+        }
+        .choice-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
+        .choice-card.reading:hover { border-color: var(--primary); }
+        .choice-card.iqra:hover { border-color: var(--iqra-color); }
+        
+        .choice-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .choice-card h2 { margin: 0 0 10px 0; font-size: 22px; color: var(--secondary); }
+        .choice-card p { margin: 0; color: var(--text-muted); font-size: 15px; }
 
-        .divider {
-            width: 1px;
-            height: 35px;
-            background-color: var(--border-color);
-            margin: 0 5px;
-            display: block;
-        }
+        /* Top Controls: Inline Layout */
+        .top-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; }
+        .divider { width: 1px; height: 35px; background-color: var(--border-color); margin: 0 5px; display: block; }
 
         /* Modern Scrollable Date Picker */
         .date-picker-wrapper { position: relative; }
-        
         .btn-datepicker {
             background-color: #f1f5f9; border: 1px solid var(--border-color);
             padding: 11px 20px; border-radius: var(--radius-md); font-size: 15px;
@@ -89,101 +110,58 @@
         .btn-datepicker:hover { background-color: #e2e8f0; }
 
         .date-popover {
-            display: none; position: absolute; top: 115%; left: 0;
-            background: white; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); box-shadow: var(--shadow-xl);
-            padding: 15px; z-index: 100; width: 280px;
+            display: none; position: absolute; top: 115%; left: 0; background: white; border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-xl); padding: 15px; z-index: 100; width: 280px;
         }
         .date-popover.active { display: block; }
 
-        .scroll-picker-container {
-            display: flex;
-            gap: 10px;
-            height: 220px;
-        }
-
+        .scroll-picker-container { display: flex; gap: 10px; height: 220px; }
         .scroll-column {
-            flex: 1;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 5px;
-            background: #f8fafc;
+            flex: 1; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 5px; background: #f8fafc;
         }
-
-        /* Custom Scrollbar */
         .scroll-column::-webkit-scrollbar { width: 4px; }
         .scroll-column::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
         .scroll-item {
-            padding: 10px 5px;
-            text-align: center;
-            font-size: 14px;
-            color: var(--text-main);
-            cursor: pointer;
-            border-radius: 4px;
-            margin-bottom: 2px;
-            transition: all 0.15s;
+            padding: 10px 5px; text-align: center; font-size: 14px; color: var(--text-main); cursor: pointer; border-radius: 4px; margin-bottom: 2px; transition: all 0.15s;
         }
-        
         .scroll-item:hover { background-color: #e2e8f0; }
         .scroll-item.active { background-color: var(--primary); color: white; font-weight: bold; }
 
         /* Buttons & Inputs */
         input[type="text"], input[type="number"] {
-            padding: 11px 16px; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); font-size: 14px; outline: none; 
-            transition: all 0.2s; min-width: 250px; flex-grow: 1; box-sizing: border-box;
+            padding: 11px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px; outline: none; transition: all 0.2s; min-width: 250px; flex-grow: 1; box-sizing: border-box;
         }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
 
         .btn-primary {
-            background-color: var(--primary); color: white; border: none; padding: 11px 20px; 
-            border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600;
-            box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap;
+            background-color: var(--primary); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap;
         }
         .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
 
         .btn-danger { background-color: var(--danger); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;}
         .btn-danger:hover { background-color: var(--danger-hover); }
 
-        /* Delete Student Button */
         .btn-delete-student {
-            background: #fee2e2; color: var(--danger); border: none; border-radius: 4px;
-            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s;
-            flex-shrink: 0;
+            background: #fee2e2; color: var(--danger); border: none; border-radius: 4px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s; flex-shrink: 0;
         }
         .btn-delete-student:hover { background: var(--danger); color: white; }
 
         /* Table */
         .table-container {
-            overflow-x: auto; overflow-y: auto; max-height: 65vh;
-            background: var(--bg-card); border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md); border: 1px solid var(--border-color);
+            overflow-x: auto; overflow-y: auto; max-height: 65vh; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1px solid var(--border-color);
         }
         table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1200px; }
         th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid #f1f5f9; padding: 0; text-align: center; }
-        
         th { background-color: #f8fafc; color: var(--secondary); font-weight: 600; padding: 12px 6px; position: sticky; top: 0; z-index: 10; }
         
-        /* Sticky Name Column */
         td:first-child { 
-            position: sticky; left: 0; background-color: #ffffff; z-index: 5; font-weight: 600; 
-            padding: 10px 15px; min-width: 140px; max-width: 180px; border-right: 2px solid var(--border-color); 
+            position: sticky; left: 0; background-color: #ffffff; z-index: 5; font-weight: 600; padding: 10px 15px; min-width: 140px; max-width: 180px; border-right: 2px solid var(--border-color); 
         }
-        
-        .student-name-wrapper {
-            display: flex; justify-content: space-between; align-items: center; gap: 8px;
-            width: 100%; text-align: left; word-wrap: break-word; white-space: normal;
-        }
-
+        .student-name-wrapper { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; text-align: left; word-wrap: break-word; white-space: normal; }
         th:first-child { 
-            position: sticky; left: 0; top: 0; background-color: #f8fafc; z-index: 20; 
-            padding: 12px 15px; min-width: 140px; max-width: 180px;
-            text-align: left; border-right: 2px solid var(--border-color); 
+            position: sticky; left: 0; top: 0; background-color: #f8fafc; z-index: 20; padding: 12px 15px; min-width: 140px; max-width: 180px; text-align: left; border-right: 2px solid var(--border-color); 
         }
-        
         tr:hover td { background-color: #f8fafc; }
         tr:hover td:first-child { background-color: #f1f5f9; }
 
@@ -193,26 +171,22 @@
 
         /* Clickable Cell */
         .cell-btn {
-            width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; 
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; transition: background 0.2s; padding: 2px; box-shadow: none;
+            width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.2s; padding: 2px; box-shadow: none;
         }
         .cell-btn:hover { background: #eff6ff; }
-        .data-badge { font-size: 10px; font-weight: 700; color: var(--primary); background: #e0f2fe; padding: 2px 4px; border-radius: 4px; margin: 1px 0; width: 80%; }
-        .data-badge.books { color: #059669; background: #d1fae5; }
+        .data-badge { font-size: 10px; font-weight: 700; background: #e0f2fe; padding: 2px 4px; border-radius: 4px; margin: 1px 0; width: 80%; }
 
-        /* Modal */
+        /* Modals */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
             z-index: 9999; justify-content: center; align-items: center;
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
             background: white; width: 90%; max-width: 360px; padding: 24px; 
             border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
-            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box;
+            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box;
         }
         @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
@@ -231,61 +205,74 @@
 
         /* ================= MOBILE RESPONSIVE TWEAKS ================= */
         @media (max-width: 768px) {
-            body {
-                padding: 15px 10px; /* Kurangkan ruang keliling pada telefon */
-            }
-            header h1 {
-                font-size: 22px;
-            }
-            .card {
-                padding: 15px; /* Kad lebih padat */
-            }
-            .top-controls {
-                flex-direction: column; /* Susun ke bawah */
-                align-items: stretch; /* Penuhkan skrin */
-                gap: 12px;
-            }
-            .divider {
-                display: none; /* Buang garisan pembahagi */
-            }
-            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary {
-                width: 100%;
-                min-width: 0; /* Override min-width untuk elak terlebih skrin */
-                box-sizing: border-box;
-            }
-            .date-popover {
-                width: calc(100vw - 40px); /* Pop-up tarikh ikut lebar skrin telefon */
-                left: 50%;
-                transform: translateX(-50%); /* Center-kan pop-up */
-                top: 105%;
-            }
-            td:first-child, th:first-child {
-                min-width: 110px; /* Kurangkan sikit saiz lajur nama di telefon */
-                max-width: 140px;
-                padding: 10px;
-            }
-            .student-name-wrapper span {
-                font-size: 13px; /* Teks nama kecil sedikit */
-            }
+            body { padding: 15px 10px; }
+            header h1 { font-size: 20px; margin-top: 40px; }
+            .btn-back { top: 0; transform: none; width: 100%; text-align: center; }
+            .card { padding: 15px; }
+            .top-controls { flex-direction: column; align-items: stretch; gap: 12px; }
+            .divider { display: none; }
+            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary { width: 100%; min-width: 0; box-sizing: border-box; }
+            .date-popover { width: calc(100vw - 40px); left: 50%; transform: translateX(-50%); top: 105%; }
+            td:first-child, th:first-child { min-width: 110px; max-width: 140px; padding: 10px; }
+            .student-name-wrapper span { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
+    <!-- 1. WELCOME SCREEN (Force Name Entry) -->
+    <div class="modal-overlay" id="welcomeScreen" style="z-index: 10000; background: rgba(15,23,42,0.95);">
+        <div class="modal-box" style="text-align: center;">
+            <h2 style="color: var(--secondary); margin-top: 0; font-size: 24px;">Welcome! 👋</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Please enter your name to access the record system.</p>
+            
+            <input type="text" id="teacherNameInput" value="Teacher " oninput="enforceTeacherPrefix(this)" 
+                   style="width: 100%; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--primary);">
+            
+            <button class="btn-primary" style="width: 100%; font-size: 16px;" onclick="saveTeacherName()">Enter System</button>
+        </div>
+    </div>
+
+    <!-- 2. HOME SCREEN (Menu Selection) -->
+    <div id="homeScreen" class="wrapper home-container" style="display: none;">
+        <div>
+            <h1 class="home-title" id="welcomeHeader">Welcome, Teacher</h1>
+            <p class="home-subtitle">Please select a module to manage your students' records.</p>
+        </div>
+        
+        <div class="cards-wrapper">
+            <!-- Reading Record Card -->
+            <div class="choice-card reading" onclick="openApp('reading')">
+                <div class="icon">📚</div>
+                <h2>Reading Book Record</h2>
+                <p>Manage pages read and storybooks completed by your students.</p>
+            </div>
+            
+            <!-- Iqra Record Card -->
+            <div class="choice-card iqra" onclick="openApp('iqra')">
+                <div class="icon">📖</div>
+                <h2>Iqra Recite Record</h2>
+                <p>Track Iqra volumes (Jilid) and pages recited by your students.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MAIN APP SCREEN (Table & Controls) -->
+    <div id="appScreen" class="wrapper" style="display: none;">
         <header>
-            <h1>Student Reading Engagement Tracker</h1>
-            <p>Official Institutional Record System (Auto-Save Enabled)</p>
+            <button class="btn-back" onclick="goHome()">← Main Menu</button>
+            <h1 id="mainAppTitle">Student Record</h1>
+            <p id="mainAppDesc">Official Institutional Record System</p>
         </header>
 
+        <!-- Top Controls -->
         <div class="card top-controls">
-            
+            <!-- Scrollable Date Picker -->
             <div class="date-picker-wrapper" id="datePickerContainer">
                 <button class="btn-datepicker" onclick="toggleDatePicker(event)">
                     <span id="displayDate">January 2026</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 </button>
-                
                 <div class="date-popover" id="datePopover">
                     <div style="font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; text-align: center;">Select Month & Year</div>
                     <div class="scroll-picker-container">
@@ -297,11 +284,12 @@
 
             <div class="divider"></div>
 
+            <!-- Add Student -->
             <input type="text" id="studentName" placeholder="Enter student name...">
             <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
-            
         </div>
 
+        <!-- Table Container -->
         <div class="table-container">
             <table id="readingTable">
                 <thead><tr id="tableHeader"></tr></thead>
@@ -310,6 +298,7 @@
         </div>
     </div>
 
+    <!-- Floated Screen (Modal) for Data Entry -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -318,12 +307,12 @@
             </div>
             <div class="modal-body">
                 <div class="input-group">
-                    <label for="inputPages">Pages Read (Numbers Only)</label>
-                    <input type="number" id="inputPages" placeholder="0" min="0">
+                    <label id="lblInput1" for="inputValue1">Data 1</label>
+                    <input type="number" id="inputValue1" placeholder="0" min="0">
                 </div>
                 <div class="input-group">
-                    <label for="inputBooks">Books Completed (Numbers Only)</label>
-                    <input type="number" id="inputBooks" placeholder="0" min="0">
+                    <label id="lblInput2" for="inputValue2">Data 2</label>
+                    <input type="number" id="inputValue2" placeholder="0" min="0">
                 </div>
             </div>
             <div class="modal-footer">
@@ -343,29 +332,120 @@
         
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
-        
-        // Pastikan currentYear tidak kurang dari 2026
         if (currentYear < 2026) currentYear = 2026; 
 
         let totalDays = 0;
         let activeCell = null; 
+        let currentMode = 'reading'; // 'reading' atau 'iqra'
 
-        // ================= DATABASE (LOCAL STORAGE) =================
-        let appDatabase = JSON.parse(localStorage.getItem('readingSystemData')) || {
-            students: [],
-            records: {}
-        };
-
-        function saveToLocalStorage() {
-            localStorage.setItem('readingSystemData', JSON.stringify(appDatabase));
+        // ================= DATABASE (LOCAL STORAGE) DENGAN PENGASINGAN =================
+        let rawData = localStorage.getItem('studentSystemData');
+        let appDatabase;
+        
+        if (rawData) {
+            appDatabase = JSON.parse(rawData);
+            // Backward compatibility jika guna kod versi lama
+            if (appDatabase.students && Array.isArray(appDatabase.students)) {
+                let oldStudents = appDatabase.students;
+                let oldRecords = appDatabase.records;
+                appDatabase = {
+                    teacherName: "",
+                    reading: { students: oldStudents, records: oldRecords },
+                    iqra: { students: [], records: {} }
+                };
+                saveToLocalStorage();
+            }
+        } else {
+            // Pangkalan data baharu
+            appDatabase = {
+                teacherName: "",
+                reading: { students: [], records: {} },
+                iqra: { students: [], records: {} }
+            };
         }
 
-        // ================= INIT =================
+        function saveToLocalStorage() {
+            localStorage.setItem('studentSystemData', JSON.stringify(appDatabase));
+        }
+
+        // ================= INIT APP =================
         window.onload = function() {
+            if (!appDatabase.teacherName) {
+                // Tunjuk popup welcome jika nama belum ada
+                document.getElementById('welcomeScreen').classList.add('active');
+            } else {
+                // Tunjuk menu utama
+                showHomeScreen();
+            }
+        };
+
+        // ================= TEACHER NAME LOGIC =================
+        function enforceTeacherPrefix(input) {
+            // Pastikan perkataan "Teacher " sentiasa ada di hadapan
+            if (!input.value.startsWith("Teacher ")) {
+                input.value = "Teacher ";
+            }
+            // Auto Caps untuk huruf pertama selepas "Teacher "
+            let namePart = input.value.substring(8);
+            if (namePart.length > 0) {
+                input.value = "Teacher " + namePart.charAt(0).toUpperCase() + namePart.slice(1);
+            }
+        }
+
+        function saveTeacherName() {
+            const inputVal = document.getElementById('teacherNameInput').value;
+            const nameOnly = inputVal.substring(8).trim();
+            
+            if (nameOnly === "") {
+                alert("Please enter your name after 'Teacher'.");
+                return;
+            }
+            
+            appDatabase.teacherName = inputVal;
+            saveToLocalStorage();
+            
+            document.getElementById('welcomeScreen').classList.remove('active');
+            showHomeScreen();
+        }
+
+        // ================= NAVIGATION =================
+        function showHomeScreen() {
+            document.getElementById('welcomeScreen').classList.remove('active');
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('homeScreen').style.display = 'flex';
+            document.getElementById('welcomeHeader').innerText = `Welcome, ${appDatabase.teacherName}`;
+        }
+
+        function openApp(mode) {
+            currentMode = mode;
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+
+            // Tukar Tajuk & Label Modal berdasarkan modul yang dipilih
+            const mainTitle = document.getElementById('mainAppTitle');
+            const lbl1 = document.getElementById('lblInput1');
+            const lbl2 = document.getElementById('lblInput2');
+
+            if(mode === 'reading') {
+                mainTitle.innerText = "Reading Book Record";
+                lbl1.innerText = "Pages Read (Numbers Only)";
+                lbl2.innerText = "Books Completed (Numbers Only)";
+                document.documentElement.style.setProperty('--primary', '#3b82f6'); // Biru
+            } else {
+                mainTitle.innerText = "Iqra Recite Record";
+                lbl1.innerText = "Iqra Volume / Jilid (1-6)";
+                lbl2.innerText = "Page Number (Numbers Only)";
+                document.documentElement.style.setProperty('--primary', '#d97706'); // Oren Iqra
+            }
+
             buildScrollPicker();
             updateDatePickerUI();
             generateGrid();
-        };
+        }
+
+        function goHome() {
+            showHomeScreen();
+        }
 
         // ================= SCROLLABLE DATE PICKER =================
         function toggleDatePicker(event) {
@@ -386,7 +466,6 @@
             monthList.innerHTML = '';
             yearList.innerHTML = '';
 
-            // Generate Months
             monthNames.forEach((month, index) => {
                 let div = document.createElement('div');
                 div.className = `scroll-item ${index === currentMonth ? 'active' : ''}`;
@@ -400,7 +479,6 @@
                 monthList.appendChild(div);
             });
 
-            // Generate Years (2026 to 2035)
             for (let y = 2026; y <= 2035; y++) {
                 let div = document.createElement('div');
                 div.className = `scroll-item ${y === currentYear ? 'active' : ''}`;
@@ -445,7 +523,8 @@
                 tableHeader.appendChild(thDay);
             }
 
-            appDatabase.students.forEach(studentName => {
+            // Muatkan senarai pelajar berdasarkan modul aktif (reading atau iqra)
+            appDatabase[currentMode].students.forEach(studentName => {
                 createStudentRow(studentName, tableBody);
             });
         }
@@ -456,13 +535,13 @@
             
             if (nameValue === "") { alert("Please enter a valid student name."); return; }
             
-            if (appDatabase.students.includes(nameValue)) {
-                alert("Student already exists in the system.");
+            if (appDatabase[currentMode].students.includes(nameValue)) {
+                alert("Student already exists in this record.");
                 return;
             }
 
-            appDatabase.students.push(nameValue);
-            appDatabase.records[nameValue] = {};
+            appDatabase[currentMode].students.push(nameValue);
+            appDatabase[currentMode].records[nameValue] = {};
             saveToLocalStorage();
 
             generateGrid();
@@ -472,11 +551,11 @@
         }
 
         function removeStudent(studentName) {
-            const confirmDelete = confirm(`Are you sure you want to delete all records for "${studentName}"?`);
+            const confirmDelete = confirm(`Are you sure you want to delete "${studentName}" from this record?`);
             
             if (confirmDelete) {
-                appDatabase.students = appDatabase.students.filter(name => name !== studentName);
-                delete appDatabase.records[studentName];
+                appDatabase[currentMode].students = appDatabase[currentMode].students.filter(name => name !== studentName);
+                delete appDatabase[currentMode].records[studentName];
                 saveToLocalStorage();
                 generateGrid();
             }
@@ -501,20 +580,21 @@
                 
                 const dateKey = `${currentYear}-${currentMonth}-${i}`;
                 
-                let savedPages = '';
-                let savedBooks = '';
-                if (appDatabase.records[studentName] && appDatabase.records[studentName][dateKey]) {
-                    savedPages = appDatabase.records[studentName][dateKey].pages || '';
-                    savedBooks = appDatabase.records[studentName][dateKey].books || '';
+                let val1 = '';
+                let val2 = '';
+                
+                if (appDatabase[currentMode].records[studentName] && appDatabase[currentMode].records[studentName][dateKey]) {
+                    val1 = appDatabase[currentMode].records[studentName][dateKey].val1 || '';
+                    val2 = appDatabase[currentMode].records[studentName][dateKey].val2 || '';
                 }
 
                 cellBtn.dataset.student = studentName;
                 cellBtn.dataset.day = i;
                 cellBtn.dataset.datekey = dateKey;
-                cellBtn.dataset.pages = savedPages;
-                cellBtn.dataset.books = savedBooks;
+                cellBtn.dataset.val1 = val1;
+                cellBtn.dataset.val2 = val2;
 
-                renderCellBadges(cellBtn, savedPages, savedBooks);
+                renderCellBadges(cellBtn, val1, val2);
 
                 cellBtn.onclick = function() { openModal(this); };
                 tdDay.appendChild(cellBtn);
@@ -523,13 +603,16 @@
             tableBody.appendChild(tr);
         }
 
-        function renderCellBadges(cellBtn, pages, books) {
+        function renderCellBadges(cellBtn, val1, val2) {
             cellBtn.innerHTML = ''; 
-            if(pages && pages > 0) {
-                cellBtn.innerHTML += `<div class="data-badge">P: ${pages}</div>`;
-            }
-            if(books && books > 0) {
-                cellBtn.innerHTML += `<div class="data-badge books">B: ${books}</div>`;
+            
+            if (currentMode === 'reading') {
+                if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
+                if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
+            } else {
+                // Gaya khas untuk IQRA
+                if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
+                if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
             }
         }
 
@@ -543,8 +626,8 @@
             document.getElementById('modalStudentName').innerText = student;
             document.getElementById('modalDateInfo').innerText = fullDateStr;
             
-            document.getElementById('inputPages').value = activeCell.dataset.pages;
-            document.getElementById('inputBooks').value = activeCell.dataset.books;
+            document.getElementById('inputValue1').value = activeCell.dataset.val1;
+            document.getElementById('inputValue2').value = activeCell.dataset.val2;
 
             document.getElementById('dataModal').classList.add('active');
         }
@@ -559,17 +642,17 @@
 
             const student = activeCell.dataset.student;
             const dateKey = activeCell.dataset.datekey;
-            const pages = document.getElementById('inputPages').value;
-            const books = document.getElementById('inputBooks').value;
+            const val1 = document.getElementById('inputValue1').value;
+            const val2 = document.getElementById('inputValue2').value;
 
-            activeCell.dataset.pages = pages;
-            activeCell.dataset.books = books;
+            activeCell.dataset.val1 = val1;
+            activeCell.dataset.val2 = val2;
 
-            if (!appDatabase.records[student]) appDatabase.records[student] = {};
-            appDatabase.records[student][dateKey] = { pages: pages, books: books };
+            if (!appDatabase[currentMode].records[student]) appDatabase[currentMode].records[student] = {};
+            appDatabase[currentMode].records[student][dateKey] = { val1: val1, val2: val2 };
             saveToLocalStorage();
 
-            renderCellBadges(activeCell, pages, books);
+            renderCellBadges(activeCell, val1, val2);
             closeModal();
         }
 
@@ -579,13 +662,13 @@
             const student = activeCell.dataset.student;
             const dateKey = activeCell.dataset.datekey;
 
-            if (appDatabase.records[student] && appDatabase.records[student][dateKey]) {
-                delete appDatabase.records[student][dateKey];
+            if (appDatabase[currentMode].records[student] && appDatabase[currentMode].records[student][dateKey]) {
+                delete appDatabase[currentMode].records[student][dateKey];
                 saveToLocalStorage();
             }
 
-            activeCell.dataset.pages = '';
-            activeCell.dataset.books = '';
+            activeCell.dataset.val1 = '';
+            activeCell.dataset.val2 = '';
             renderCellBadges(activeCell, '', '');
             
             closeModal();
