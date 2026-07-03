@@ -18,6 +18,7 @@
             --danger: #ef4444;
             --danger-hover: #dc2626;
             --iqra-color: #d97706; 
+            --tuition-color: #10b981; /* Warna hijau untuk tuisyen */
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -64,12 +65,13 @@
         
         .cards-wrapper { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
         .choice-card {
-            background: var(--bg-card); border-radius: var(--radius-lg); padding: 40px 20px; width: 100%; max-width: 350px;
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: 40px 20px; width: 100%; max-width: 320px;
             box-shadow: var(--shadow-md); border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
         }
         .choice-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
         .choice-card.reading:hover { border-color: var(--primary); }
         .choice-card.iqra:hover { border-color: var(--iqra-color); }
+        .choice-card.tuition:hover { border-color: var(--tuition-color); }
         .choice-card .icon { font-size: 40px; margin-bottom: 15px; }
         .choice-card h2 { margin: 0 0 10px 0; font-size: 22px; color: var(--secondary); }
         .choice-card p { margin: 0; color: var(--text-muted); font-size: 15px; }
@@ -202,14 +204,11 @@
 
         /* ================= KOD CETAKAN PDF (PRINT/PDF CSS) ================= */
         @media print {
-            /* Sembunyikan elemen UI yang tak diperlukan untuk PDF */
             .top-controls, .btn-back, .btn-delete-student, .modal-overlay { display: none !important; }
-            
             body { background: white; padding: 0; margin: 0; font-size: 10pt; }
             header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
             header p { font-size: 12pt; color: #333; margin-bottom: 20px; }
             
-            /* Bebaskan jadual dari kotak & membenarkan jadual penuh */
             .table-container { 
                 max-height: none !important; 
                 overflow: visible !important; 
@@ -218,32 +217,24 @@
             }
             .wrapper { max-width: 100%; width: 100%; }
             
-            /* Gaya jadual khas PDF */
             table { width: 100%; border-collapse: collapse; min-width: auto; }
-            th, td { 
-                border: 1px solid #000 !important; 
-                padding: 4px !important; 
-                color: black !important; 
-            }
+            th, td { border: 1px solid #000 !important; padding: 4px !important; color: black !important; }
             th { 
                 background-color: #f0f0f0 !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
-                position: static; /* Buang sticky semasa PDF */
+                position: static;
             }
             td:first-child, th:first-child { 
                 position: static; border-right: 1px solid #000 !important; 
                 min-width: auto; max-width: none; background-color: white !important;
             }
             
-            /* Kemaskan lencana/data dalam jadual PDF */
             .cell-btn { min-height: 25px; padding: 0; }
             .data-badge { 
                 border: 1px solid #000; background: transparent !important; 
                 color: black !important; font-size: 8pt; margin: 1px auto; width: 90%;
             }
-
-            /* Tetapkan saiz kertas PDF Landscape secara automatik */
             @page { size: A4 landscape; margin: 10mm; }
         }
     </style>
@@ -279,6 +270,13 @@
                 <div class="icon">📖</div>
                 <h2>Iqra Recite Record</h2>
                 <p>Track Iqra volumes (Jilid) and pages recited by your students.</p>
+            </div>
+
+            <!-- NEW TUITION CARD -->
+            <div class="choice-card tuition" onclick="openApp('tuition')">
+                <div class="icon">🎓</div>
+                <h2>Tuition Record</h2>
+                <p>Track tuition subjects, attendance, and student performance scores.</p>
             </div>
         </div>
     </div>
@@ -333,11 +331,12 @@
             <div class="modal-body">
                 <div class="input-group">
                     <label id="lblInput1" for="inputValue1">Data 1</label>
-                    <input type="number" id="inputValue1" placeholder="0" min="0">
+                    <!-- Ditukar ke jenis 'text' supaya boleh taip nama subjek tuisyen -->
+                    <input type="text" id="inputValue1" placeholder="Enter data...">
                 </div>
                 <div class="input-group">
                     <label id="lblInput2" for="inputValue2">Data 2</label>
-                    <input type="number" id="inputValue2" placeholder="0" min="0">
+                    <input type="text" id="inputValue2" placeholder="Enter data...">
                 </div>
             </div>
             <div class="modal-footer">
@@ -375,15 +374,24 @@
                 appDatabase = {
                     teacherName: "",
                     reading: { students: oldStudents, records: oldRecords },
-                    iqra: { students: [], records: {} }
+                    iqra: { students: [], records: {} },
+                    tuition: { students: [], records: {} } // Ditambah untuk migrasi selamat
                 };
                 saveToLocalStorage();
             }
+            
+            // Periksa jika 'tuition' wujud (untuk pengguna yang dah ada data localStorage sebelumnya)
+            if (!appDatabase.tuition) {
+                appDatabase.tuition = { students: [], records: {} };
+                saveToLocalStorage();
+            }
+
         } else {
             appDatabase = {
                 teacherName: "",
                 reading: { students: [], records: {} },
-                iqra: { students: [], records: {} }
+                iqra: { students: [], records: {} },
+                tuition: { students: [], records: {} } // Seksyen baru dimasukkan sini
             };
         }
 
@@ -447,6 +455,12 @@
                 lbl1.innerText = "Pages Read (Numbers Only)";
                 lbl2.innerText = "Books Completed (Numbers Only)";
                 document.documentElement.style.setProperty('--primary', '#3b82f6');
+            } else if (mode === 'tuition') { // TETAPAN MOD TUISYEN
+                mainTitle.innerText = "Tuition Record";
+                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
+                lbl1.innerText = "Subject / Subjek";
+                lbl2.innerText = "Score / Markah";
+                document.documentElement.style.setProperty('--primary', '#10b981'); 
             } else {
                 mainTitle.innerText = "Iqra Recite Record";
                 mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
@@ -466,15 +480,10 @@
 
         // ================= EXPORT PDF / PRINT =================
         function exportPDF() {
-            // Update tajuk seketika untuk paparan PDF (tambah nama bulan/tahun)
             const oldDesc = document.getElementById('mainAppDesc').innerText;
             const currentPeriod = document.getElementById('displayDate').innerText;
             document.getElementById('mainAppDesc').innerText = `${oldDesc} | Period: ${currentPeriod}`;
-            
-            // Panggil fungsi print browser
             window.print();
-            
-            // Kembalikan tajuk asal
             document.getElementById('mainAppDesc').innerText = oldDesc;
         }
 
@@ -626,11 +635,14 @@
         function renderCellBadges(cellBtn, val1, val2) {
             cellBtn.innerHTML = ''; 
             if (currentMode === 'reading') {
-                if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
-                if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
+                if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
+            } else if (currentMode === 'tuition') { // KEMASKINI BADGE TUISYEN
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#d1fae5; color:#059669;">Sub: ${val1}</div>`;
+                if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fce7f3; color:#be185d;">Mk: ${val2}</div>`;
             } else {
-                if(val1 && val1 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
-                if(val2 && val2 > 0) cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
+                if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
             }
         }
 
