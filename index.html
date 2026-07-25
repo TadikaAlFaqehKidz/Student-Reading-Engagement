@@ -19,7 +19,7 @@
             --danger: #ef4444;
             --danger-hover: #dc2626;
             --iqra-color: #d97706; 
-            --tuition-color: #10b981; /* Warna hijau untuk tuisyen */
+            --tuition-color: #10b981; 
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
@@ -110,7 +110,7 @@
         .scroll-item.active { background-color: var(--primary); color: white; font-weight: bold; }
 
         /* Buttons & Inputs */
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="password"] {
             padding: 11px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px; outline: none; transition: all 0.2s; min-width: 250px; flex-grow: 1; box-sizing: border-box;
         }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
@@ -119,11 +119,15 @@
             background-color: var(--primary); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap;
         }
         .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        
+        /* Disabled Buttons Styling */
+        .btn-primary:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7;}
+        .btn-danger:disabled { background-color: #fca5a5; cursor: not-allowed; opacity: 0.7;}
 
         .btn-secondary {
             background-color: white; color: var(--secondary); border: 1px solid var(--border-color);
             padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px;
-            font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+            font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
 
@@ -171,7 +175,7 @@
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
-            background: white; width: 90%; max-width: 360px; padding: 24px; 
+            background: white; width: 90%; max-width: 380px; padding: 24px; 
             border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
             animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box;
         }
@@ -180,15 +184,48 @@
         .modal-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .modal-header h3 { margin: 0 0 5px 0; font-size: 18px; color: var(--secondary); }
         .modal-header p { margin: 0; font-size: 14px; color: var(--primary); font-weight: 600; }
+        
         .modal-body .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;}
         .modal-body .input-group label { font-size: 14px; font-weight: 600; color: var(--secondary); }
         .modal-body input { width: 100%; }
+        
+        /* Signature Section Styles */
+        .signature-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .sig-header {
+            display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--secondary); margin-bottom: 6px; font-size: 14px;
+        }
+        .sig-desc { font-size: 12px; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;}
+        .sig-form { display: flex; gap: 8px; }
+        .sig-form input { 
+            flex: 1; padding: 10px; border: 1px solid var(--border-color); 
+            border-radius: var(--radius-sm); font-size: 14px; box-sizing: border-box; min-width: 0;
+        }
+        .btn-sig { 
+            background: var(--secondary); color: white; border: none; padding: 0 16px; 
+            border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;
+        }
+        .btn-sig:hover { background: #1e293b; }
+        
+        .sig-status { 
+            display: none; background: #dcfce7; color: #166534; padding: 12px; 
+            border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; 
+            align-items: center; justify-content: center; gap: 8px; border: 1px solid #bbf7d0;
+        }
+
         .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px;}
         .modal-footer .right-btns { display: flex; gap: 10px; }
+        
         .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 11px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight:600;}
         .btn-cancel:hover { background: #f1f5f9; }
 
-        /* ================= MOBILE RESPONSIVE TWEAKS ================= */
+        /* ================= MOBILE RESPONSIVE ================= */
         @media (max-width: 768px) {
             body { padding: 15px 10px; }
             header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
@@ -203,39 +240,19 @@
             .student-name-wrapper span { font-size: 13px; }
         }
 
-        /* ================= KOD CETAKAN PDF (PRINT/PDF CSS) ================= */
         @media print {
             .top-controls, .btn-back, .btn-delete-student, .modal-overlay { display: none !important; }
             body { background: white; padding: 0; margin: 0; font-size: 10pt; }
             header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
             header p { font-size: 12pt; color: #333; margin-bottom: 20px; }
-            
-            .table-container { 
-                max-height: none !important; 
-                overflow: visible !important; 
-                box-shadow: none !important; 
-                border: none !important; 
-            }
+            .table-container { max-height: none !important; overflow: visible !important; box-shadow: none !important; border: none !important; }
             .wrapper { max-width: 100%; width: 100%; }
-            
             table { width: 100%; border-collapse: collapse; min-width: auto; }
             th, td { border: 1px solid #000 !important; padding: 4px !important; color: black !important; }
-            th { 
-                background-color: #f0f0f0 !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-                position: static;
-            }
-            td:first-child, th:first-child { 
-                position: static; border-right: 1px solid #000 !important; 
-                min-width: auto; max-width: none; background-color: white !important;
-            }
-            
+            th { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; position: static;}
+            td:first-child, th:first-child { position: static; border-right: 1px solid #000 !important; min-width: auto; max-width: none; background-color: white !important;}
             .cell-btn { min-height: 25px; padding: 0; }
-            .data-badge { 
-                border: 1px solid #000; background: transparent !important; 
-                color: black !important; font-size: 8pt; margin: 1px auto; width: 90%;
-            }
+            .data-badge { border: 1px solid #000; background: transparent !important; color: black !important; font-size: 8pt; margin: 1px auto; width: 90%;}
             @page { size: A4 landscape; margin: 10mm; }
         }
     </style>
@@ -273,7 +290,6 @@
                 <p>Track Iqra volumes (Jilid) and pages recited by your students.</p>
             </div>
 
-            <!-- NEW TUITION CARD -->
             <div class="choice-card tuition" onclick="openApp('tuition')">
                 <div class="icon">🎓</div>
                 <h2>Tuition Record</h2>
@@ -323,6 +339,7 @@
         </div>
     </div>
 
+    <!-- MODAL DATA -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -330,28 +347,52 @@
                 <p id="modalDateInfo">Date</p>
             </div>
             <div class="modal-body">
+                
+                <!-- INPUT DATA SENTIASA BOLEH DIISI -->
                 <div class="input-group">
                     <label id="lblInput1" for="inputValue1">Data 1</label>
-                    <!-- Ditukar ke jenis 'text' supaya boleh taip nama subjek tuisyen -->
                     <input type="text" id="inputValue1" placeholder="Enter data...">
                 </div>
                 <div class="input-group">
                     <label id="lblInput2" for="inputValue2">Data 2</label>
                     <input type="text" id="inputValue2" placeholder="Enter data...">
                 </div>
+
+                <!-- SEKSYEN PENGESAHAN (DESIGN KEMAS & TERSUSUN) -->
+                <div class="signature-section">
+                    <div class="sig-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Manager's Confirmation </span>
+                    </div>
+                    <p class="sig-desc" id="authMessage">Confirm the manager's password to allow this record to be saved in the system.</p>
+                    
+                    <!-- Form Masukkan Password -->
+                    <div id="signatureForm" class="sig-form">
+                        <input type="password" id="managerPassword" placeholder="Passcode">
+                        <button type="button" class="btn-sig" onclick="verifyManager()">Comfirm</button>
+                    </div>
+
+                    <!-- Status Jika Berjaya -->
+                    <div id="signatureStatus" class="sig-status">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Verified & Storable</span>
+                    </div>
+                </div>
+
             </div>
+            
             <div class="modal-footer">
-                <button class="btn-danger" onclick="clearModalData()">Clear Data</button>
+                <button class="btn-danger" id="clearDataBtn" onclick="clearModalData()" disabled>Clear Data</button>
                 <div class="right-btns">
                     <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button class="btn-primary" onclick="saveModalData()">Save Data</button>
+                    <!-- Butang ini akan 'disabled' selagi belum ada tandatangan -->
+                    <button class="btn-primary" id="saveDataBtn" onclick="saveModalData()" disabled>Save Data</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Data & Variables
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const dayLetters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
         
@@ -363,7 +404,7 @@
         let activeCell = null; 
         let currentMode = 'reading'; 
 
-        // ================= DATABASE (LOCAL STORAGE) =================
+        // DATABASE (LOCAL STORAGE)
         let rawData = localStorage.getItem('studentSystemData');
         let appDatabase;
         
@@ -376,23 +417,20 @@
                     teacherName: "",
                     reading: { students: oldStudents, records: oldRecords },
                     iqra: { students: [], records: {} },
-                    tuition: { students: [], records: {} } // Ditambah untuk migrasi selamat
+                    tuition: { students: [], records: {} } 
                 };
                 saveToLocalStorage();
             }
-            
-            // Periksa jika 'tuition' wujud (untuk pengguna yang dah ada data localStorage sebelumnya)
             if (!appDatabase.tuition) {
                 appDatabase.tuition = { students: [], records: {} };
                 saveToLocalStorage();
             }
-
         } else {
             appDatabase = {
                 teacherName: "",
                 reading: { students: [], records: {} },
                 iqra: { students: [], records: {} },
-                tuition: { students: [], records: {} } // Seksyen baru dimasukkan sini
+                tuition: { students: [], records: {} } 
             };
         }
 
@@ -400,7 +438,6 @@
             localStorage.setItem('studentSystemData', JSON.stringify(appDatabase));
         }
 
-        // ================= INIT APP =================
         window.onload = function() {
             if (!appDatabase.teacherName) {
                 document.getElementById('welcomeScreen').classList.add('active');
@@ -409,7 +446,6 @@
             }
         };
 
-        // ================= TEACHER NAME LOGIC =================
         function enforceTeacherPrefix(input) {
             if (!input.value.startsWith("Teacher ")) {
                 input.value = "Teacher ";
@@ -424,15 +460,12 @@
             const inputVal = document.getElementById('teacherNameInput').value;
             const nameOnly = inputVal.substring(8).trim();
             if (nameOnly === "") { alert("Please enter your name after 'Teacher'."); return; }
-            
             appDatabase.teacherName = inputVal;
             saveToLocalStorage();
-            
             document.getElementById('welcomeScreen').classList.remove('active');
             showHomeScreen();
         }
 
-        // ================= NAVIGATION =================
         function showHomeScreen() {
             document.getElementById('welcomeScreen').classList.remove('active');
             document.getElementById('appScreen').style.display = 'none';
@@ -456,7 +489,7 @@
                 lbl1.innerText = "Pages Read (Numbers Only)";
                 lbl2.innerText = "Books Completed (Numbers Only)";
                 document.documentElement.style.setProperty('--primary', '#3b82f6');
-            } else if (mode === 'tuition') { // TETAPAN MOD TUISYEN
+            } else if (mode === 'tuition') { 
                 mainTitle.innerText = "Tuition Record";
                 mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
                 lbl1.innerText = "Subject / Subjek";
@@ -479,7 +512,6 @@
             showHomeScreen();
         }
 
-        // ================= EXPORT PDF / PRINT =================
         function exportPDF() {
             const oldDesc = document.getElementById('mainAppDesc').innerText;
             const currentPeriod = document.getElementById('displayDate').innerText;
@@ -488,7 +520,6 @@
             document.getElementById('mainAppDesc').innerText = oldDesc;
         }
 
-        // ================= SCROLLABLE DATE PICKER =================
         function toggleDatePicker(event) { document.getElementById('datePopover').classList.toggle('active'); }
 
         document.addEventListener('click', function(event) {
@@ -499,7 +530,6 @@
         function buildScrollPicker() {
             const monthList = document.getElementById('monthScrollList');
             const yearList = document.getElementById('yearScrollList');
-            
             monthList.innerHTML = '';
             yearList.innerHTML = '';
 
@@ -534,7 +564,6 @@
             document.getElementById('displayDate').innerText = `${monthNames[currentMonth]} ${currentYear}`;
         }
 
-        // ================= GRID GENERATION =================
         function generateGrid() {
             totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
             const tableHeader = document.getElementById('tableHeader');
@@ -568,14 +597,12 @@
         function addStudent() {
             const nameInput = document.getElementById('studentName');
             const nameValue = nameInput.value.trim();
-            
             if (nameValue === "") { alert("Please enter a valid student name."); return; }
             if (appDatabase[currentMode].students.includes(nameValue)) { alert("Student already exists in this record."); return; }
 
             appDatabase[currentMode].students.push(nameValue);
             appDatabase[currentMode].records[nameValue] = {};
             saveToLocalStorage();
-
             generateGrid();
             nameInput.value = '';
             nameInput.focus();
@@ -612,10 +639,12 @@
                 
                 let val1 = '';
                 let val2 = '';
+                let isSigned = false;
                 
                 if (appDatabase[currentMode].records[studentName] && appDatabase[currentMode].records[studentName][dateKey]) {
                     val1 = appDatabase[currentMode].records[studentName][dateKey].val1 || '';
                     val2 = appDatabase[currentMode].records[studentName][dateKey].val2 || '';
+                    isSigned = appDatabase[currentMode].records[studentName][dateKey].isSigned || false;
                 }
 
                 cellBtn.dataset.student = studentName;
@@ -623,9 +652,9 @@
                 cellBtn.dataset.datekey = dateKey;
                 cellBtn.dataset.val1 = val1;
                 cellBtn.dataset.val2 = val2;
+                cellBtn.dataset.isSigned = isSigned;
 
-                renderCellBadges(cellBtn, val1, val2);
-
+                renderCellBadges(cellBtn, val1, val2, isSigned);
                 cellBtn.onclick = function() { openModal(this); };
                 tdDay.appendChild(cellBtn);
                 tr.appendChild(tdDay);
@@ -633,21 +662,25 @@
             tableBody.appendChild(tr);
         }
 
-        function renderCellBadges(cellBtn, val1, val2) {
+        function renderCellBadges(cellBtn, val1, val2, isSigned = false) {
             cellBtn.innerHTML = ''; 
             if (currentMode === 'reading') {
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
-            } else if (currentMode === 'tuition') { // KEMASKINI BADGE TUISYEN
+            } else if (currentMode === 'tuition') { 
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#d1fae5; color:#059669;">Sub: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fce7f3; color:#be185d;">Mk: ${val2}</div>`;
             } else {
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
             }
+            
+            if (isSigned === true || isSigned === 'true') {
+                cellBtn.innerHTML += `<div class="data-badge" style="background:#dcfce7; color:#166534; border: 1px solid #166534; margin-top: 3px;">✍️ Disahkan</div>`;
+            }
         }
 
-        // ================= MODAL LOGIC =================
+        // ================= KAWALAN PENGESAHAN KEMAS KINI =================
         function openModal(buttonElement) {
             activeCell = buttonElement;
             const student = activeCell.dataset.student;
@@ -657,10 +690,56 @@
             document.getElementById('modalStudentName').innerText = student;
             document.getElementById('modalDateInfo').innerText = fullDateStr;
             
-            document.getElementById('inputValue1').value = activeCell.dataset.val1;
-            document.getElementById('inputValue2').value = activeCell.dataset.val2;
+            const input1 = document.getElementById('inputValue1');
+            const input2 = document.getElementById('inputValue2');
+            const saveBtn = document.getElementById('saveDataBtn');
+            const clearBtn = document.getElementById('clearDataBtn');
+            const authMessage = document.getElementById('authMessage');
+
+            input1.value = activeCell.dataset.val1;
+            input2.value = activeCell.dataset.val2;
+
+            const isSigned = activeCell.dataset.isSigned === 'true';
+            document.getElementById('managerPassword').value = ''; 
+            
+            // JIKA SUDAH DISAHKAN SEBELUM INI: Buka ruangan butang save
+            if (isSigned) {
+                document.getElementById('signatureStatus').style.display = 'flex';
+                document.getElementById('signatureForm').style.display = 'none';
+                authMessage.style.display = 'none';
+                
+                saveBtn.disabled = false;
+                clearBtn.disabled = false;
+            } 
+            // JIKA BELUM DISAHKAN: Kunci butang save sahaja, input boleh diisi
+            else {
+                document.getElementById('signatureStatus').style.display = 'none';
+                document.getElementById('signatureForm').style.display = 'flex';
+                authMessage.style.display = 'block';
+
+                saveBtn.disabled = true;
+                clearBtn.disabled = true;
+            }
 
             document.getElementById('dataModal').classList.add('active');
+        }
+
+        function verifyManager() {
+            const passInput = document.getElementById('managerPassword').value;
+            if (passInput === '139613') {
+                document.getElementById('signatureStatus').style.display = 'flex';
+                document.getElementById('signatureForm').style.display = 'none';
+                document.getElementById('authMessage').style.display = 'none';
+                
+                if (activeCell) activeCell.dataset.isSigned = 'true';
+
+                // Buka kunci (Unlock) butang selepas disahkan
+                document.getElementById('saveDataBtn').disabled = false;
+                document.getElementById('clearDataBtn').disabled = false;
+
+            } else {
+                alert('Kata laluan pengurus salah! Sila cuba lagi.');
+            }
         }
 
         function closeModal() { document.getElementById('dataModal').classList.remove('active'); activeCell = null; }
@@ -671,15 +750,16 @@
             const dateKey = activeCell.dataset.datekey;
             const val1 = document.getElementById('inputValue1').value;
             const val2 = document.getElementById('inputValue2').value;
+            const isSigned = activeCell.dataset.isSigned === 'true';
 
             activeCell.dataset.val1 = val1;
             activeCell.dataset.val2 = val2;
 
             if (!appDatabase[currentMode].records[student]) appDatabase[currentMode].records[student] = {};
-            appDatabase[currentMode].records[student][dateKey] = { val1: val1, val2: val2 };
+            appDatabase[currentMode].records[student][dateKey] = { val1: val1, val2: val2, isSigned: isSigned };
             saveToLocalStorage();
 
-            renderCellBadges(activeCell, val1, val2);
+            renderCellBadges(activeCell, val1, val2, isSigned);
             closeModal();
         }
 
@@ -695,7 +775,9 @@
 
             activeCell.dataset.val1 = '';
             activeCell.dataset.val2 = '';
-            renderCellBadges(activeCell, '', '');
+            activeCell.dataset.isSigned = 'false';
+            
+            renderCellBadges(activeCell, '', '', false);
             closeModal();
         }
     </script>
