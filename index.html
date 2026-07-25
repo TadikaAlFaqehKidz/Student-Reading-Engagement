@@ -767,8 +767,8 @@
             const moduleView = document.getElementById('moduleView');
             const statChipsContainer = document.getElementById('statChipsContainer');
             
-            // Panggil elemen butang menu
-            const menuToggleBtn = document.querySelector('.btn-menu-toggle');
+            // Pilih keseluruhan bar atas untuk paparan mobile
+            const mobileTopbar = document.querySelector('.mobile-topbar');
             
             const mainTitle = document.getElementById('mainAppTitle');
             const mainDesc = document.getElementById('mainAppDesc');
@@ -783,8 +783,8 @@
                 moduleView.style.display = 'none';
                 statChipsContainer.style.display = 'none';
                 
-                // Sembunyikan butang menu jika di paparan Dashboard
-                if(menuToggleBtn) menuToggleBtn.style.display = 'none'; 
+                // Sembunyikan keseluruhan bar (butang & teks) pada Dashboard
+                if(mobileTopbar) mobileTopbar.style.display = 'none'; 
 
                 eyebrow.innerText = 'Overview';
                 mainTitle.innerText = "Dashboard";
@@ -795,8 +795,8 @@
                 moduleView.style.display = 'block';
                 statChipsContainer.style.display = 'flex';
                 
-                // Tunjukkan semula butang menu di paparan modul
-                if(menuToggleBtn) menuToggleBtn.style.display = 'flex'; 
+                // Tunjukkan semula bar pada paparan modul
+                if(mobileTopbar) mobileTopbar.style.display = 'flex'; 
 
                 if(mode === 'reading') {
                     eyebrow.innerText = 'Reading Module';
@@ -852,7 +852,10 @@
             
             if (currentMode === 'tuition' || currentMode === 'iqra') {
                 verifyGroup.style.display = 'flex';
-                verifyDivider.style.display = 'block';
+                
+                // Dibiarkan kosong ('') supaya garisan ini akur pada arahan CSS:
+                // (ia akan sembunyi sepenuhnya di mobile view)
+                verifyDivider.style.display = ''; 
                 
                 const monthKey = `${currentYear}-${currentMonth}`;
                 const isVerified = appDatabase.verifiedMonths[currentMode] && appDatabase.verifiedMonths[currentMode][monthKey];
