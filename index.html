@@ -45,6 +45,8 @@
             --sidebar-w: 268px;
 
             /* module accents */
+            --m-dashboard: #16181d;
+            --m-dashboard-soft: #e7e7e2;
             --m-reading: #4f46e5;
             --m-reading-soft: #eef0fd;
             --m-iqra: #b45309;
@@ -142,10 +144,34 @@
         .stat-chip .stat-value { font-size: 16px; font-weight: 800; color: var(--ink); line-height: 1.1; }
         .stat-chip .stat-label { font-size: 10.5px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
-        /* ---------- Cards ---------- */
+        /* ---------- Cards & Dashboard ---------- */
         .card {
             background: var(--surface); border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .module-card h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 10px;}
+        .module-card p { margin: 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+        .module-icon {
+            width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
         }
 
         /* ---------- Toolbar ---------- */
@@ -324,7 +350,7 @@
         }
 
         @media print {
-            .sidebar, .mobile-topbar, .toolbar, .modal-overlay, .btn-delete-student, .stat-chips { display: none !important; }
+            .sidebar, .mobile-topbar, .toolbar, .modal-overlay, .btn-delete-student, .stat-chips, #dashboardView { display: none !important; }
             .main-content { margin-left: 0 !important; padding: 0 !important; }
             body { background: white; padding: 0; margin: 0; font-size: 10pt; }
             .page-header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
@@ -389,6 +415,15 @@
             </div>
 
             <nav class="sidebar-nav">
+                <div class="nav-label">Menu</div>
+
+                <div class="nav-item" data-mode="dashboard" style="--item-accent:var(--m-dashboard); --item-soft:var(--m-dashboard-soft)" onclick="openApp('dashboard')">
+                    <div class="nav-icon-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                    </div>
+                    <span>Dashboard</span>
+                </div>
+
                 <div class="nav-label">Modules</div>
 
                 <div class="nav-item" data-mode="reading" style="--item-accent:var(--m-reading); --item-soft:var(--m-reading-soft)" onclick="openApp('reading')">
@@ -429,7 +464,7 @@
                     <button class="btn-menu-toggle" onclick="toggleSidebar(true)">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                     </button>
-                    <span class="mobile-topbar-title" id="mobileTopbarTitle">Student Record</span>
+                    <span class="mobile-topbar-title" id="mobileTopbarTitle">Dashboard</span>
                 </div>
 
                 <!-- Manager Verified Signature block for PDF Output -->
@@ -437,11 +472,11 @@
 
                 <div class="page-header">
                     <div class="page-header-left">
-                        <div class="eyebrow" id="moduleEyebrow">Module</div>
-                        <h1 id="mainAppTitle">Student Record</h1>
-                        <p id="mainAppDesc">Official Institutional Record System</p>
+                        <div class="eyebrow" id="moduleEyebrow">Overview</div>
+                        <h1 id="mainAppTitle">Dashboard</h1>
+                        <p id="mainAppDesc">System Overview & Quick Access</p>
                     </div>
-                    <div class="stat-chips">
+                    <div class="stat-chips" id="statChipsContainer" style="display: none;">
                         <div class="stat-chip">
                             <span class="stat-value" id="statStudentCount">0</span>
                             <span class="stat-label">Students</span>
@@ -453,61 +488,102 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="toolbar">
-                        <div class="toolbar-group month-nav">
-                            <button class="btn-icon-sm" onclick="shiftMonth(-1)" title="Previous month">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                            </button>
-                            <div class="date-display-box" id="displayDate">
-                                January 2026
+                <!-- DASHBOARD VIEW -->
+                <div id="dashboardView">
+                    <div class="card" style="background: var(--ink); color: white; padding: 32px 36px; border: none; margin-bottom: 24px; position: relative; overflow: hidden;">
+                        <div style="position: relative; z-index: 2;">
+                            <h2 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em;">Welcome back, <span id="dashTeacherName">Teacher</span>! 👋</h2>
+                            <p style="margin: 0; color: var(--ink-faint); font-size: 15px;">Select a module below to start managing your student records for this month.</p>
+                        </div>
+                        <!-- Decorative shape -->
+                        <div style="position: absolute; right: -20px; top: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card module-card" onclick="openApp('reading')" style="border-top: 4px solid var(--m-reading);">
+                            <div class="module-icon" style="background: var(--m-reading-soft); color: var(--m-reading);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                             </div>
-                            <button class="btn-icon-sm" onclick="shiftMonth(1)" title="Next month">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                            </button>
+                            <h3>Reading Book Record</h3>
+                            <p>Manage daily reading pages and track completed books.</p>
                         </div>
 
-                        <div class="toolbar-divider"></div>
-
-                        <div class="toolbar-group" style="flex: 1; min-width: 220px;">
-                            <input type="text" id="studentName" placeholder="Enter student name...">
-                            <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
-                        </div>
-                        
-                        <div class="toolbar-divider" id="verifyDivider" style="display:none;"></div>
-
-                        <!-- Manager verification block -->
-                        <div class="toolbar-group" id="verifyGroup" style="display:none;">
-                            <button type="button" class="btn-primary" id="btnVerifyMonth" onclick="openVerifyMonthModal()" style="background-color: var(--ink); color: white;">
-                                Manager Verify
-                            </button>
-                            <div id="verifiedBadge" class="sig-status" style="display:none; margin:0; padding: 9px 14px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                                <span>Manager Verified</span>
+                        <div class="card module-card" onclick="openApp('iqra')" style="border-top: 4px solid var(--m-iqra);">
+                            <div class="module-icon" style="background: var(--m-iqra-soft); color: var(--m-iqra);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                             </div>
+                            <h3>Iqra Recite Record</h3>
+                            <p>Track student progress across Iqra volumes and pages.</p>
                         </div>
 
-                        <div class="toolbar-divider"></div>
-
-                        <button type="button" class="btn-secondary" onclick="exportPDF()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            Export PDF
-                        </button>
+                        <div class="card module-card" onclick="openApp('tuition')" style="border-top: 4px solid var(--m-tuition);">
+                            <div class="module-icon" style="background: var(--m-tuition-soft); color: var(--m-tuition);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 10-10-5L2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                            </div>
+                            <h3>Tuition Record</h3>
+                            <p>Record tuition subjects, attendance, and student marks.</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="table-container">
-                    <table id="readingTable">
-                        <thead><tr id="tableHeader"></tr></thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
+                <!-- MODULE VIEW (Toolbar & Table) -->
+                <div id="moduleView" style="display: none;">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="toolbar">
+                            <div class="toolbar-group month-nav">
+                                <button class="btn-icon-sm" onclick="shiftMonth(-1)" title="Previous month">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                                </button>
+                                <div class="date-display-box" id="displayDate">
+                                    January 2026
+                                </div>
+                                <button class="btn-icon-sm" onclick="shiftMonth(1)" title="Next month">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <div class="toolbar-group" style="flex: 1; min-width: 220px;">
+                                <input type="text" id="studentName" placeholder="Enter student name...">
+                                <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
+                            </div>
+                            
+                            <div class="toolbar-divider" id="verifyDivider" style="display:none;"></div>
+
+                            <!-- Manager verification block -->
+                            <div class="toolbar-group" id="verifyGroup" style="display:none;">
+                                <button type="button" class="btn-primary" id="btnVerifyMonth" onclick="openVerifyMonthModal()" style="background-color: var(--ink); color: white;">
+                                    Manager Verify
+                                </button>
+                                <div id="verifiedBadge" class="sig-status" style="display:none; margin:0; padding: 9px 14px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                    <span>Manager Verified</span>
+                                </div>
+                            </div>
+
+                            <div class="toolbar-divider"></div>
+
+                            <button type="button" class="btn-secondary" onclick="exportPDF()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                Export PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="readingTable">
+                            <thead><tr id="tableHeader"></tr></thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!-- MODAL DAILY DATA ENTRY (Passcode removed) -->
+    <!-- MODAL DAILY DATA ENTRY -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
             <div class="modal-topstripe"></div>
@@ -538,7 +614,7 @@
         </div>
     </div>
 
-    <!-- MODAL MANAGER VERIFICATION (Monthly) -->
+    <!-- MODAL MANAGER VERIFICATION -->
     <div class="modal-overlay" id="verifyMonthModal">
         <div class="modal-box">
             <div class="modal-topstripe" style="background: var(--ink);"></div>
@@ -568,9 +644,10 @@
         const dayLetters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
         const moduleMeta = {
-            reading: { title: 'Reading Book Record', color: '#4f46e5', soft: '#eef0fd' },
-            iqra:    { title: 'Iqra Recite Record',  color: '#b45309', soft: '#fdf2e3' },
-            tuition: { title: 'Tuition Record',      color: '#0f8a5f', soft: '#e7f7f0' }
+            dashboard: { title: 'Dashboard',             color: '#16181d', soft: '#e7e7e2' },
+            reading:   { title: 'Reading Book Record',   color: '#4f46e5', soft: '#eef0fd' },
+            iqra:      { title: 'Iqra Recite Record',    color: '#b45309', soft: '#fdf2e3' },
+            tuition:   { title: 'Tuition Record',        color: '#0f8a5f', soft: '#e7f7f0' }
         };
 
         let currentMonth = new Date().getMonth();
@@ -579,7 +656,7 @@
 
         let totalDays = 0;
         let activeCell = null;
-        let currentMode = 'reading';
+        let currentMode = 'dashboard'; // Default to Dashboard on entry
 
         // DATABASE (LOCAL STORAGE)
         let rawData = localStorage.getItem('studentSystemData');
@@ -588,7 +665,6 @@
         if (rawData) {
             appDatabase = JSON.parse(rawData);
             
-            // Migration for older versions
             if (appDatabase.students && Array.isArray(appDatabase.students)) {
                 let oldStudents = appDatabase.students;
                 let oldRecords = appDatabase.records;
@@ -651,6 +727,7 @@
 
             const teacherName = appDatabase.teacherName || 'Teacher';
             document.getElementById('sidebarTeacherName').innerText = teacherName;
+            document.getElementById('dashTeacherName').innerText = teacherName;
 
             const namePart = teacherName.replace(/^Teacher\s*/i, '').trim();
             document.getElementById('teacherAvatar').innerText = namePart ? namePart.charAt(0).toUpperCase() : 'T';
@@ -673,48 +750,71 @@
         function openApp(mode) {
             currentMode = mode;
 
+            // Update active state in sidebar
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.mode === mode);
             });
             toggleSidebar(false);
             applyModuleTheme(mode);
 
+            const dashboardView = document.getElementById('dashboardView');
+            const moduleView = document.getElementById('moduleView');
+            const statChipsContainer = document.getElementById('statChipsContainer');
+            
             const mainTitle = document.getElementById('mainAppTitle');
             const mainDesc = document.getElementById('mainAppDesc');
             const mobileTitle = document.getElementById('mobileTopbarTitle');
             const eyebrow = document.getElementById('moduleEyebrow');
+            
             const lbl1 = document.getElementById('lblInput1');
             const lbl2 = document.getElementById('lblInput2');
 
-            if(mode === 'reading') {
-                eyebrow.innerText = 'Reading Module';
-                mainTitle.innerText = "Reading Book Record";
-                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
-                lbl1.innerText = "Pages Read (Numbers Only)";
-                lbl2.innerText = "Books Completed (Numbers Only)";
-            } else if (mode === 'tuition') {
-                eyebrow.innerText = 'Tuition Module';
-                mainTitle.innerText = "Tuition Record";
-                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
-                lbl1.innerText = "Book";
-                lbl2.innerText = "Pages";
-            } else {
-                eyebrow.innerText = 'Iqra Module';
-                mainTitle.innerText = "Iqra Recite Record";
-                mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
-                lbl1.innerText = "Iqra Volume (1-6)";
-                lbl2.innerText = "Page Number (Numbers Only)";
-            }
-            mobileTitle.innerText = mainTitle.innerText;
+            if (mode === 'dashboard') {
+                dashboardView.style.display = 'block';
+                moduleView.style.display = 'none';
+                statChipsContainer.style.display = 'none';
 
-            updateDatePickerUI();
-            updateVerificationUI();
-            generateGrid();
+                eyebrow.innerText = 'Overview';
+                mainTitle.innerText = "Dashboard";
+                mainDesc.innerText = "System Overview & Quick Access";
+                mobileTitle.innerText = "Dashboard";
+            } else {
+                dashboardView.style.display = 'none';
+                moduleView.style.display = 'block';
+                statChipsContainer.style.display = 'flex';
+
+                if(mode === 'reading') {
+                    eyebrow.innerText = 'Reading Module';
+                    mainTitle.innerText = "Reading Book Record";
+                    mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
+                    lbl1.innerText = "Pages Read (Numbers Only)";
+                    lbl2.innerText = "Books Completed (Numbers Only)";
+                } else if (mode === 'tuition') {
+                    eyebrow.innerText = 'Tuition Module';
+                    mainTitle.innerText = "Tuition Record";
+                    mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
+                    lbl1.innerText = "Book";
+                    lbl2.innerText = "Pages";
+                } else {
+                    eyebrow.innerText = 'Iqra Module';
+                    mainTitle.innerText = "Iqra Recite Record";
+                    mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
+                    lbl1.innerText = "Iqra Volume (1-6)";
+                    lbl2.innerText = "Page Number (Numbers Only)";
+                }
+                mobileTitle.innerText = mainTitle.innerText;
+
+                updateDatePickerUI();
+                updateVerificationUI();
+                generateGrid();
+            }
         }
 
         function updateStatChips() {
-            document.getElementById('statStudentCount').innerText = appDatabase[currentMode].students.length;
-            document.getElementById('statPeriod').innerText = `${monthNames[currentMonth].substring(0,3)} ${currentYear}`;
+            if (currentMode !== 'dashboard') {
+                document.getElementById('statStudentCount').innerText = appDatabase[currentMode].students.length;
+                document.getElementById('statPeriod').innerText = `${monthNames[currentMonth].substring(0,3)} ${currentYear}`;
+            }
         }
 
         function shiftMonth(delta) {
@@ -814,6 +914,8 @@
         }
 
         function generateGrid() {
+            if (currentMode === 'dashboard') return;
+
             totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
             const tableHeader = document.getElementById('tableHeader');
             const tableBody = document.getElementById('tableBody');
