@@ -767,6 +767,9 @@
             const moduleView = document.getElementById('moduleView');
             const statChipsContainer = document.getElementById('statChipsContainer');
             
+            // Panggil elemen butang menu
+            const menuToggleBtn = document.querySelector('.btn-menu-toggle');
+            
             const mainTitle = document.getElementById('mainAppTitle');
             const mainDesc = document.getElementById('mainAppDesc');
             const mobileTitle = document.getElementById('mobileTopbarTitle');
@@ -779,6 +782,9 @@
                 dashboardView.style.display = 'block';
                 moduleView.style.display = 'none';
                 statChipsContainer.style.display = 'none';
+                
+                // Sembunyikan butang menu jika di paparan Dashboard
+                if(menuToggleBtn) menuToggleBtn.style.display = 'none'; 
 
                 eyebrow.innerText = 'Overview';
                 mainTitle.innerText = "Dashboard";
@@ -788,6 +794,9 @@
                 dashboardView.style.display = 'none';
                 moduleView.style.display = 'block';
                 statChipsContainer.style.display = 'flex';
+                
+                // Tunjukkan semula butang menu di paparan modul
+                if(menuToggleBtn) menuToggleBtn.style.display = 'flex'; 
 
                 if(mode === 'reading') {
                     eyebrow.innerText = 'Reading Module';
@@ -1034,8 +1043,8 @@
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="color: #4338ca;">P: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
             } else if (currentMode === 'tuition') {
-                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#d1fae5; color:#059669;">Sub: ${val1}</div>`;
-                if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fce7f3; color:#be185d;">Mk: ${val2}</div>`;
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#d1fae5; color:#059669;">Bk: ${val1}</div>`;
+                if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fce7f3; color:#be185d;">Pg: ${val2}</div>`;
             } else {
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#b45309;">Vol: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
