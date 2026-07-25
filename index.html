@@ -6,247 +6,344 @@
     <title>Student Record System</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <style>
-        /* Modern Institutional Design Tokens */
+        /* ============================================================
+           DESIGN TOKENS
+        ============================================================ */
         :root {
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --secondary: #0f172a;
-            --bg-main: #f8fafc;
-            --bg-card: #ffffff;
-            --border-color: #e2e8f0;
-            --text-main: #334155;
-            --text-muted: #64748b;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --iqra-color: #d97706; 
-            --tuition-color: #10b981; 
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --bg-page: #f5f5f2;
+            --surface: #ffffff;
+            --surface-alt: #fafaf8;
+
+            --ink: #16181d;
+            --ink-soft: #6b7078;
+            --ink-faint: #9aa0a8;
+
+            --border: #e7e7e2;
+            --border-strong: #d9d9d3;
+
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --accent-soft: #eef0fd;
+
+            --danger: #e2483b;
+            --danger-hover: #c73c30;
+            --danger-soft: #fdecea;
+
+            --success: #0f8a5f;
+            --success-soft: #e7f7f0;
+
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --radius-xs: 7px;
+
+            --shadow-xs: 0 1px 2px rgb(20 20 15 / 0.05);
+            --shadow-sm: 0 2px 8px -2px rgb(20 20 15 / 0.08);
+            --shadow-md: 0 10px 24px -8px rgb(20 20 15 / 0.12);
+            --shadow-lg: 0 24px 48px -12px rgb(20 20 15 / 0.18);
+
+            --sidebar-w: 268px;
+
+            /* module accents */
+            --m-reading: #4f46e5;
+            --m-reading-soft: #eef0fd;
+            --m-iqra: #b45309;
+            --m-iqra-soft: #fdf2e3;
+            --m-tuition: #0f8a5f;
+            --m-tuition-soft: #e7f7f0;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Arial", sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background-color: var(--bg-page);
+            color: var(--ink);
             -webkit-font-smoothing: antialiased;
         }
 
-        .wrapper { max-width: 1400px; margin: 0 auto; }
+        ::selection { background: var(--accent-soft); color: var(--accent-hover); }
 
-        header { margin-bottom: 25px; text-align: center; position: relative; }
-        header h1 { color: var(--secondary); font-size: 28px; font-weight: 700; margin: 0 0 8px 0; }
-        header p { color: var(--text-muted); margin: 0; font-size: 15px; }
+        /* ============================================================
+           APP SHELL
+        ============================================================ */
+        .app-shell { display: flex; min-height: 100vh; }
 
-        .btn-back {
-            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            background: white; border: 1px solid var(--border-color); padding: 8px 15px; 
-            border-radius: var(--radius-md); cursor: pointer; font-weight: 600; 
-            color: var(--secondary); box-shadow: var(--shadow-sm);
+        /* ---------- Sidebar (light) ---------- */
+        .sidebar {
+            width: var(--sidebar-w); flex-shrink: 0; background: var(--surface);
+            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
+            z-index: 500; border-right: 1px solid var(--border);
         }
-        .btn-back:hover { background: #f1f5f9; }
 
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 12px; padding: 26px 22px 20px;
+        }
+        .brand-mark {
+            width: 40px; height: 40px; border-radius: 12px; background: var(--ink);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .brand-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+        .brand-text strong { color: var(--ink); font-size: 15px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+        .brand-text span { color: var(--ink-faint); font-size: 11px; font-weight: 500; }
+
+        .sidebar-nav { flex: 1; padding: 6px 16px; overflow-y: auto; }
+        .nav-label {
+            font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-faint);
+            padding: 0 6px; margin: 18px 0 10px 0; font-weight: 700;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: var(--radius-sm);
+            color: var(--ink-soft); cursor: pointer; margin-bottom: 4px; transition: all 0.15s;
+            font-size: 13.5px; font-weight: 600;
+        }
+        .nav-icon-wrap {
+            width: 30px; height: 30px; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center;
+            background: var(--surface-alt); color: var(--ink-faint); flex-shrink: 0; transition: all 0.15s;
+        }
+        .nav-item:hover { background: var(--surface-alt); color: var(--ink); }
+        .nav-item.active { background: var(--item-soft, var(--accent-soft)); color: var(--item-accent, var(--accent)); }
+        .nav-item.active .nav-icon-wrap { background: var(--surface); color: var(--item-accent, var(--accent)); box-shadow: var(--shadow-xs); }
+
+        .sidebar-footer {
+            padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+        }
+        .teacher-avatar {
+            width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: white; font-weight: 700;
+            font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .teacher-meta { min-width: 0; }
+        .teacher-meta strong { display: block; color: var(--ink); font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .teacher-meta span { color: var(--ink-faint); font-size: 11px; }
+
+        .main-content { flex: 1; margin-left: var(--sidebar-w); padding: 30px 36px 40px; min-width: 0; }
+        .content-inner { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;}
+
+        .mobile-topbar { display: none; }
+        .sidebar-scrim { display: none; }
+
+        /* ---------- Page header ---------- */
+        .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .page-header-left { min-width: 0; }
+        .eyebrow {
+            display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em; color: var(--module-color, var(--accent)); margin-bottom: 8px;
+        }
+        .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--module-color, var(--accent)); }
+        .page-header h1 { color: var(--ink); font-size: 26px; font-weight: 800; margin: 0 0 5px 0; letter-spacing: -0.02em; }
+        .page-header p { color: var(--ink-soft); margin: 0; font-size: 14px; }
+
+        .stat-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+        .stat-chip {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 9px 16px; display: flex; flex-direction: column; gap: 1px; box-shadow: var(--shadow-xs); min-width: 96px;
+        }
+        .stat-chip .stat-value { font-size: 16px; font-weight: 800; color: var(--ink); line-height: 1.1; }
+        .stat-chip .stat-label { font-size: 10.5px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+
+        /* ---------- Cards ---------- */
         .card {
-            background: var(--bg-card); padding: 20px 24px; border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md); border: 1px solid var(--border-color); margin-bottom: 25px;
+            background: var(--surface); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border);
         }
 
-        /* Dashboard / Choice Cards */
-        .home-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            min-height: 80vh; gap: 30px; text-align: center;
-        }
-        .home-title { font-size: 32px; color: var(--secondary); margin: 0; }
-        .home-subtitle { font-size: 16px; color: var(--text-muted); margin: 0; }
-        
-        .cards-wrapper { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
-        .choice-card {
-            background: var(--bg-card); border-radius: var(--radius-lg); padding: 40px 20px; width: 100%; max-width: 320px;
-            box-shadow: var(--shadow-md); border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
-        }
-        .choice-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
-        .choice-card.reading:hover { border-color: var(--primary); }
-        .choice-card.iqra:hover { border-color: var(--iqra-color); }
-        .choice-card.tuition:hover { border-color: var(--tuition-color); }
-        .choice-card .icon { font-size: 40px; margin-bottom: 15px; }
-        .choice-card h2 { margin: 0 0 10px 0; font-size: 22px; color: var(--secondary); }
-        .choice-card p { margin: 0; color: var(--text-muted); font-size: 15px; }
+        /* ---------- Toolbar ---------- */
+        .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 16px 20px; }
+        .toolbar-group { display: flex; align-items: center; gap: 10px; }
+        .toolbar-divider { width: 1px; height: 30px; background-color: var(--border); display: block; }
 
-        /* Top Controls */
-        .top-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; }
-        .divider { width: 1px; height: 35px; background-color: var(--border-color); margin: 0 5px; display: block; }
-
-        .date-picker-wrapper { position: relative; }
-        .btn-datepicker {
-            background-color: #f1f5f9; border: 1px solid var(--border-color); padding: 11px 20px; 
-            border-radius: var(--radius-md); font-size: 15px; font-weight: 600; color: var(--secondary); 
-            cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; 
-            transition: all 0.2s; white-space: nowrap;
+        .month-nav { display: flex; align-items: center; gap: 6px; }
+        .btn-icon-sm {
+            width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-xs);
+            cursor: pointer; color: var(--ink-soft); transition: all 0.15s;
         }
-        .btn-datepicker:hover { background-color: #e2e8f0; }
+        .btn-icon-sm:hover { background: var(--border); color: var(--ink); }
 
-        .date-popover {
-            display: none; position: absolute; top: 115%; left: 0; background: white; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); box-shadow: var(--shadow-xl); padding: 15px; z-index: 100; width: 280px;
+        .date-display-box {
+            background-color: var(--surface-alt); border: 1px solid var(--border); padding: 9px 16px;
+            border-radius: var(--radius-xs); font-size: 14px; font-weight: 700; color: var(--ink);
+            display: flex; align-items: center; justify-content: center; min-width: 148px; white-space: nowrap;
         }
-        .date-popover.active { display: block; }
 
-        .scroll-picker-container { display: flex; gap: 10px; height: 220px; }
-        .scroll-column {
-            flex: 1; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 5px; background: #f8fafc;
-        }
-        .scroll-column::-webkit-scrollbar { width: 4px; }
-        .scroll-column::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-        .scroll-item {
-            padding: 10px 5px; text-align: center; font-size: 14px; color: var(--text-main); cursor: pointer; border-radius: 4px; margin-bottom: 2px; transition: all 0.15s;
-        }
-        .scroll-item:hover { background-color: #e2e8f0; }
-        .scroll-item.active { background-color: var(--primary); color: white; font-weight: bold; }
-
-        /* Buttons & Inputs */
+        /* ---------- Inputs & Buttons ---------- */
         input[type="text"], input[type="number"], input[type="password"] {
-            padding: 11px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px; outline: none; transition: all 0.2s; min-width: 250px; flex-grow: 1; box-sizing: border-box;
+            padding: 10px 15px; border: 1px solid var(--border); border-radius: var(--radius-xs); font-size: 14px;
+            outline: none; transition: all 0.15s; min-width: 220px; flex-grow: 1; background: var(--surface); color: var(--ink);
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        input::placeholder { color: var(--ink-faint); }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
         .btn-primary {
-            background-color: var(--primary); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap;
+            background-color: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: var(--radius-xs);
+            cursor: pointer; font-size: 13.5px; font-weight: 700; box-shadow: var(--shadow-xs); transition: all 0.15s; white-space: nowrap;
         }
-        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-        
-        /* Disabled Buttons Styling */
-        .btn-primary:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.7;}
-        .btn-danger:disabled { background-color: #fca5a5; cursor: not-allowed; opacity: 0.7;}
+        .btn-primary:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
+        .btn-primary:disabled { background-color: #c7c9d1; cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.8;}
 
         .btn-secondary {
-            background-color: white; color: var(--secondary); border: 1px solid var(--border-color);
-            padding: 11px 20px; border-radius: var(--radius-md); cursor: pointer; font-size: 14px;
-            font-weight: 600; box-shadow: var(--shadow-sm); transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px;
+            background-color: var(--surface); color: var(--ink); border: 1px solid var(--border);
+            padding: 10px 18px; border-radius: var(--radius-xs); cursor: pointer; font-size: 13.5px;
+            font-weight: 700; transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+        .btn-secondary:hover { background-color: var(--surface-alt); border-color: var(--border-strong); }
 
-        .btn-danger { background-color: var(--danger); color: white; border: none; padding: 11px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;}
+        .btn-danger { background-color: var(--danger); color: white; border: none; padding: 10px 18px; border-radius: var(--radius-xs); font-weight: 700; cursor: pointer; font-size: 13.5px;}
         .btn-danger:hover { background-color: var(--danger-hover); }
+        .btn-danger:disabled { background-color: #f3b6b0; cursor: not-allowed; opacity: 0.8;}
 
         .btn-delete-student {
-            background: #fee2e2; color: var(--danger); border: none; border-radius: 4px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s; flex-shrink: 0;
+            background: var(--danger-soft); color: var(--danger); border: none; border-radius: 7px; width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; font-weight: bold; transition: all 0.15s; flex-shrink: 0;
         }
         .btn-delete-student:hover { background: var(--danger); color: white; }
 
-        /* Table */
+        /* ---------- Table ---------- */
         .table-container {
-            overflow-x: auto; overflow-y: auto; max-height: 65vh; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1px solid var(--border-color);
+            overflow-x: auto; overflow-y: auto; max-height: 63vh; background: var(--surface); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative;
+        }
+        .table-container::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--module-color, var(--accent));
+            z-index: 21; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
         table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 1200px; }
-        th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid #f1f5f9; padding: 0; text-align: center; }
-        th { background-color: #f8fafc; color: var(--secondary); font-weight: 600; padding: 12px 6px; position: sticky; top: 0; z-index: 10; }
-        
-        td:first-child { 
-            position: sticky; left: 0; background-color: #ffffff; z-index: 5; font-weight: 600; padding: 10px 15px; min-width: 140px; max-width: 180px; border-right: 2px solid var(--border-color); 
+        th, td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--surface-alt); padding: 0; text-align: center; }
+        th { background-color: var(--surface-alt); color: var(--ink); font-weight: 700; padding: 13px 6px; position: sticky; top: 0; z-index: 10; font-size: 12.5px; }
+
+        td:first-child {
+            position: sticky; left: 0; background-color: var(--surface); z-index: 5; font-weight: 600; padding: 8px 14px; min-width: 168px; max-width: 200px; border-right: 1px solid var(--border-strong);
         }
-        .student-name-wrapper { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; text-align: left; word-wrap: break-word; white-space: normal; }
-        th:first-child { 
-            position: sticky; left: 0; top: 0; background-color: #f8fafc; z-index: 20; padding: 12px 15px; min-width: 140px; max-width: 180px; text-align: left; border-right: 2px solid var(--border-color); 
+        .student-name-wrapper { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; text-align: left; }
+        .student-chip { display: flex; align-items: center; gap: 9px; min-width: 0; }
+        .student-avatar {
+            width: 26px; height: 26px; border-radius: 50%; background: var(--module-color-soft, var(--accent-soft)); color: var(--module-color, var(--accent));
+            font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        tr:hover td { background-color: #f8fafc; }
-        tr:hover td:first-child { background-color: #f1f5f9; }
+        .student-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; }
+
+        th:first-child {
+            position: sticky; left: 0; top: 0; background-color: var(--surface-alt); z-index: 20; padding: 13px 14px; min-width: 168px; max-width: 200px; text-align: left; border-right: 1px solid var(--border-strong);
+        }
+        tbody tr:nth-child(even) td { background-color: #fbfbfa; }
+        tbody tr:nth-child(even) td:first-child { background-color: #f7f7f5; }
+        tr:hover td { background-color: var(--accent-soft) !important; }
 
         .header-day { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .day-letter { font-size: 11px; color: var(--primary); font-weight: 800; }
-        .date-num { font-size: 14px; color: var(--secondary); }
+        .day-letter { font-size: 10px; color: var(--module-color, var(--accent)); font-weight: 800; }
+        .date-num { font-size: 13px; color: var(--ink); font-weight: 700; }
 
         .cell-btn {
-            width: 100%; height: 100%; min-height: 45px; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.2s; padding: 2px; box-shadow: none;
+            width: 100%; height: 100%; min-height: 44px; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.15s; padding: 2px; box-shadow: none;
         }
-        .cell-btn:hover { background: #eff6ff; }
-        .data-badge { font-size: 10px; font-weight: 700; background: #e0f2fe; padding: 2px 4px; border-radius: 4px; margin: 1px 0; width: 80%; }
+        .cell-btn:hover { background: var(--module-color-soft, var(--accent-soft)); }
+        .data-badge { font-size: 10px; font-weight: 700; background: var(--surface-alt); padding: 2px 5px; border-radius: 5px; margin: 1px 0; width: 82%; }
 
-        /* Modals */
+        /* ---------- Modals ---------- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
+            background: rgba(20, 20, 18, 0.55); backdrop-filter: blur(4px);
             z-index: 9999; justify-content: center; align-items: center;
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
-            background: white; width: 90%; max-width: 380px; padding: 24px; 
-            border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
-            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box;
+            background: var(--surface); width: 90%; max-width: 380px; padding: 0; overflow: hidden;
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+            animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box;
         }
-        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        
-        .modal-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-        .modal-header h3 { margin: 0 0 5px 0; font-size: 18px; color: var(--secondary); }
-        .modal-header p { margin: 0; font-size: 14px; color: var(--primary); font-weight: 600; }
-        
-        .modal-body .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;}
-        .modal-body .input-group label { font-size: 14px; font-weight: 600; color: var(--secondary); }
+        @keyframes popIn { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .modal-topstripe { height: 5px; background: var(--module-color, var(--accent)); }
+        .modal-pad { padding: 22px 24px 24px; }
+
+        .modal-header { margin-bottom: 18px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .modal-header h3 { margin: 0 0 4px 0; font-size: 17px; color: var(--ink); font-weight: 800; }
+        .modal-header p { margin: 0; font-size: 13px; color: var(--module-color, var(--accent)); font-weight: 700; }
+
+        .modal-body .input-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px;}
+        .modal-body .input-group label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
         .modal-body input { width: 100%; }
-        
-        /* Signature Section Styles */
-        .signature-section {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-        .sig-header {
-            display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--secondary); margin-bottom: 6px; font-size: 14px;
-        }
-        .sig-desc { font-size: 12px; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;}
-        .sig-form { display: flex; gap: 8px; }
-        .sig-form input { 
-            flex: 1; padding: 10px; border: 1px solid var(--border-color); 
-            border-radius: var(--radius-sm); font-size: 14px; box-sizing: border-box; min-width: 0;
-        }
-        .btn-sig { 
-            background: var(--secondary); color: white; border: none; padding: 0 16px; 
-            border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px;
-        }
-        .btn-sig:hover { background: #1e293b; }
-        
-        .sig-status { 
-            display: none; background: #dcfce7; color: #166534; padding: 12px; 
-            border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; 
-            align-items: center; justify-content: center; gap: 8px; border: 1px solid #bbf7d0;
+
+        .sig-status {
+            display: none; background: var(--success-soft); color: var(--success); padding: 11px;
+            border-radius: var(--radius-xs); font-weight: 700; font-size: 12.5px;
+            align-items: center; justify-content: center; gap: 8px;
         }
 
-        .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px;}
+        .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 22px;}
         .modal-footer .right-btns { display: flex; gap: 10px; }
-        
-        .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 11px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight:600;}
-        .btn-cancel:hover { background: #f1f5f9; }
 
-        /* ================= MOBILE RESPONSIVE ================= */
-        @media (max-width: 768px) {
-            body { padding: 15px 10px; }
-            header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
-            header h1 { font-size: 22px; margin-top: 10px; margin-bottom: 5px; }
-            .btn-back { position: relative; top: auto; transform: none; width: auto; padding: 8px 20px; }
-            .card { padding: 15px; }
-            .top-controls { flex-direction: column; align-items: stretch; gap: 12px; }
-            .divider { display: none; }
-            .date-picker-wrapper, .btn-datepicker, input[type="text"], .btn-primary, .btn-secondary { width: 100%; min-width: 0; box-sizing: border-box; justify-content: center;}
-            .date-popover { width: calc(100vw - 40px); left: 50%; transform: translateX(-50%); top: 105%; }
-            td:first-child, th:first-child { min-width: 110px; max-width: 140px; padding: 10px; }
-            .student-name-wrapper span { font-size: 13px; }
+        .btn-cancel { background: var(--surface); border: 1px solid var(--border); color: var(--ink-soft); padding: 10px 15px; border-radius: var(--radius-xs); cursor: pointer; font-weight:700; font-size: 13.5px;}
+        .btn-cancel:hover { background: var(--surface-alt); }
+
+        /* welcome */
+        .welcome-box { text-align: center; }
+        .welcome-mark { width: 52px; height: 52px; border-radius: 14px; background: var(--ink); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+
+        /* ---------- Print Digital Signature ---------- */
+        .print-only-signature { display: none; }
+
+        /* ============================================================
+           MOBILE
+        ============================================================ */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: var(--shadow-lg);
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 18px 16px 28px; }
+            .mobile-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+            .btn-menu-toggle {
+                background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xs);
+                width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+                cursor: pointer; box-shadow: var(--shadow-xs); flex-shrink: 0; color: var(--ink);
+            }
+            .mobile-topbar-title { font-weight: 800; color: var(--ink); font-size: 14.5px; }
+            .sidebar-scrim { display: none; position: fixed; inset: 0; background: rgba(20,20,18,0.4); z-index: 400; }
+            .sidebar-scrim.active { display: block; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-group { flex-direction: column; align-items: stretch; width: 100%;}
+            .toolbar-divider { display: none; }
+            
+            /* Responsive Month Nav adjustments */
+            .month-nav { 
+                justify-content: space-between; 
+                width: 100%;
+                display: flex;
+            }
+            .date-display-box {
+                flex: 1;
+                margin: 0 10px;
+                width: auto;
+            }
+
+            input[type="text"], .btn-primary, .btn-secondary { width: 100%; min-width: 0; box-sizing: border-box; justify-content: center;}
+            td:first-child, th:first-child { min-width: 118px; max-width: 150px; padding: 9px; }
         }
 
         @media print {
-            .top-controls, .btn-back, .btn-delete-student, .modal-overlay { display: none !important; }
+            .sidebar, .mobile-topbar, .toolbar, .modal-overlay, .btn-delete-student, .stat-chips { display: none !important; }
+            .main-content { margin-left: 0 !important; padding: 0 !important; }
             body { background: white; padding: 0; margin: 0; font-size: 10pt; }
-            header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
-            header p { font-size: 12pt; color: #333; margin-bottom: 20px; }
-            .table-container { max-height: none !important; overflow: visible !important; box-shadow: none !important; border: none !important; }
-            .wrapper { max-width: 100%; width: 100%; }
+            .page-header h1 { font-size: 18pt; margin-bottom: 5px; color: black; }
+            .page-header p { font-size: 12pt; color: #333; margin-bottom: 20px; }
+            
+            .print-only-signature { 
+                display: block !important; 
+                text-align: center; 
+                border: 2px dashed #000; 
+                padding: 15px; 
+                margin-bottom: 25px; 
+                font-weight: bold; 
+                font-size: 14pt; 
+                border-radius: 8px;
+            }
+
+            .table-container { max-height: none !important; overflow: visible !important; box-shadow: none !important; border: none !important; margin-top: 15px;}
+            .table-container::before { display: none; }
+            .content-inner { max-width: 100%; width: 100%; }
             table { width: 100%; border-collapse: collapse; min-width: auto; }
             th, td { border: 1px solid #000 !important; padding: 4px !important; color: black !important; }
             th { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; position: static;}
@@ -259,134 +356,208 @@
 </head>
 <body>
 
-    <div class="modal-overlay" id="welcomeScreen" style="z-index: 10000; background: rgba(15,23,42,0.95);">
-        <div class="modal-box" style="text-align: center;">
-            <h2 style="color: var(--secondary); margin-top: 0; font-size: 24px;">Welcome! 👋</h2>
-            <p style="color: var(--text-muted); margin-bottom: 25px;">Please enter your name to access the record system.</p>
-            
-            <input type="text" id="teacherNameInput" value="Teacher " oninput="enforceTeacherPrefix(this)" 
-                   style="width: 100%; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: var(--primary);">
-            
-            <button class="btn-primary" style="width: 100%; font-size: 16px;" onclick="saveTeacherName()">Enter System</button>
+    <!-- WELCOME / LOGIN -->
+    <div class="modal-overlay" id="welcomeScreen" style="z-index: 10000; background: rgba(20,20,18,0.6);">
+        <div class="modal-box welcome-box" style="padding: 30px 26px;">
+            <div class="welcome-mark">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <h2 style="color: var(--ink); margin: 0 0 6px; font-size: 21px; font-weight: 800;">Welcome</h2>
+            <p style="color: var(--ink-soft); margin-bottom: 22px; font-size: 13.5px;">Please enter your name to access the record system.</p>
+
+            <input type="text" id="teacherNameInput" value="Teacher " oninput="enforceTeacherPrefix(this)"
+                   style="width: 100%; text-align: center; font-size: 16px; font-weight: 700; margin-bottom: 18px; color: var(--accent);">
+
+            <button class="btn-primary" style="width: 100%; font-size: 14.5px; padding: 12px;" onclick="saveTeacherName()">Enter System</button>
         </div>
     </div>
 
-    <div id="homeScreen" class="wrapper home-container" style="display: none;">
-        <div>
-            <h1 class="home-title" id="welcomeHeader">Welcome, Teacher</h1>
-            <p class="home-subtitle">Please select a module to manage your students' records.</p>
-        </div>
-        
-        <div class="cards-wrapper">
-            <div class="choice-card reading" onclick="openApp('reading')">
-                <div class="icon">📚</div>
-                <h2>Reading Book Record</h2>
-                <p>Manage pages read and storybooks completed by your students.</p>
-            </div>
-            
-            <div class="choice-card iqra" onclick="openApp('iqra')">
-                <div class="icon">📖</div>
-                <h2>Iqra Recite Record</h2>
-                <p>Track Iqra volumes (Jilid) and pages recited by your students.</p>
-            </div>
+    <!-- APP SHELL: SIDEBAR + CONTENT -->
+    <div class="app-shell" id="appShell" style="display: none;">
 
-            <div class="choice-card tuition" onclick="openApp('tuition')">
-                <div class="icon">🎓</div>
-                <h2>Tuition Record</h2>
-                <p>Track tuition subjects, attendance, and student performance scores.</p>
-            </div>
-        </div>
-    </div>
+        <div class="sidebar-scrim" id="sidebarScrim" onclick="toggleSidebar(false)"></div>
 
-    <div id="appScreen" class="wrapper" style="display: none;">
-        <header>
-            <button class="btn-back" onclick="goHome()">← Main Menu</button>
-            <h1 id="mainAppTitle">Student Record</h1>
-            <p id="mainAppDesc">Official Institutional Record System</p>
-        </header>
-
-        <div class="card top-controls">
-            <div class="date-picker-wrapper" id="datePickerContainer">
-                <button class="btn-datepicker" onclick="toggleDatePicker(event)">
-                    <span id="displayDate">January 2026</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </button>
-                <div class="date-popover" id="datePopover">
-                    <div style="font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; text-align: center;">Select Month & Year</div>
-                    <div class="scroll-picker-container">
-                        <div class="scroll-column" id="monthScrollList"></div>
-                        <div class="scroll-column" id="yearScrollList"></div>
-                    </div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-mark">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <div class="brand-text">
+                    <strong>Student Records</strong>
+                    <span>Institutional System</span>
                 </div>
             </div>
 
-            <input type="text" id="studentName" placeholder="Enter student name...">
-            <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
+            <nav class="sidebar-nav">
+                <div class="nav-label">Modules</div>
 
-            <div class="divider"></div>
+                <div class="nav-item" data-mode="reading" style="--item-accent:var(--m-reading); --item-soft:var(--m-reading-soft)" onclick="openApp('reading')">
+                    <div class="nav-icon-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <span>Reading Book Record</span>
+                </div>
 
-            <button type="button" class="btn-secondary" onclick="exportPDF()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                Export PDF
-            </button>
-        </div>
+                <div class="nav-item" data-mode="iqra" style="--item-accent:var(--m-iqra); --item-soft:var(--m-iqra-soft)" onclick="openApp('iqra')">
+                    <div class="nav-icon-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <span>Iqra Recite Record</span>
+                </div>
 
-        <div class="table-container">
-            <table id="readingTable">
-                <thead><tr id="tableHeader"></tr></thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+                <div class="nav-item" data-mode="tuition" style="--item-accent:var(--m-tuition); --item-soft:var(--m-tuition-soft)" onclick="openApp('tuition')">
+                    <div class="nav-icon-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 10-10-5L2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                    </div>
+                    <span>Tuition Record</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="teacher-avatar" id="teacherAvatar">T</div>
+                <div class="teacher-meta">
+                    <strong id="sidebarTeacherName">Teacher</strong>
+                    <span>Signed in</span>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <div class="content-inner">
+
+                <div class="mobile-topbar">
+                    <button class="btn-menu-toggle" onclick="toggleSidebar(true)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <span class="mobile-topbar-title" id="mobileTopbarTitle">Student Record</span>
+                </div>
+
+                <!-- Manager Verified Signature block for PDF Output -->
+                <div id="printSignature" class="print-only-signature"></div>
+
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <div class="eyebrow" id="moduleEyebrow">Module</div>
+                        <h1 id="mainAppTitle">Student Record</h1>
+                        <p id="mainAppDesc">Official Institutional Record System</p>
+                    </div>
+                    <div class="stat-chips">
+                        <div class="stat-chip">
+                            <span class="stat-value" id="statStudentCount">0</span>
+                            <span class="stat-label">Students</span>
+                        </div>
+                        <div class="stat-chip">
+                            <span class="stat-value" id="statPeriod">—</span>
+                            <span class="stat-label">Period</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="toolbar">
+                        <div class="toolbar-group month-nav">
+                            <button class="btn-icon-sm" onclick="shiftMonth(-1)" title="Previous month">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <div class="date-display-box" id="displayDate">
+                                January 2026
+                            </div>
+                            <button class="btn-icon-sm" onclick="shiftMonth(1)" title="Next month">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="toolbar-divider"></div>
+
+                        <div class="toolbar-group" style="flex: 1; min-width: 220px;">
+                            <input type="text" id="studentName" placeholder="Enter student name...">
+                            <button type="button" class="btn-primary" onclick="addStudent()">+ Add Student</button>
+                        </div>
+                        
+                        <div class="toolbar-divider" id="verifyDivider" style="display:none;"></div>
+
+                        <!-- Manager verification block -->
+                        <div class="toolbar-group" id="verifyGroup" style="display:none;">
+                            <button type="button" class="btn-primary" id="btnVerifyMonth" onclick="openVerifyMonthModal()" style="background-color: var(--ink); color: white;">
+                                Manager Verify
+                            </button>
+                            <div id="verifiedBadge" class="sig-status" style="display:none; margin:0; padding: 9px 14px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span>Manager Verified</span>
+                            </div>
+                        </div>
+
+                        <div class="toolbar-divider"></div>
+
+                        <button type="button" class="btn-secondary" onclick="exportPDF()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Export PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="readingTable">
+                        <thead><tr id="tableHeader"></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <!-- MODAL DATA -->
+    <!-- MODAL DAILY DATA ENTRY (Passcode removed) -->
     <div class="modal-overlay" id="dataModal">
         <div class="modal-box">
-            <div class="modal-header">
-                <h3 id="modalStudentName">Student Name</h3>
-                <p id="modalDateInfo">Date</p>
+            <div class="modal-topstripe"></div>
+            <div class="modal-pad">
+                <div class="modal-header">
+                    <h3 id="modalStudentName">Student Name</h3>
+                    <p id="modalDateInfo">Date</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label id="lblInput1" for="inputValue1">Data 1</label>
+                        <input type="text" id="inputValue1" placeholder="Enter data...">
+                    </div>
+                    <div class="input-group">
+                        <label id="lblInput2" for="inputValue2">Data 2</label>
+                        <input type="text" id="inputValue2" placeholder="Enter data...">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-danger" id="clearDataBtn" onclick="clearModalData()">Clear Data</button>
+                    <div class="right-btns">
+                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                        <button class="btn-primary" id="saveDataBtn" onclick="saveModalData()">Save Data</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                
-                <!-- INPUT DATA SENTIASA BOLEH DIISI -->
-                <div class="input-group">
-                    <label id="lblInput1" for="inputValue1">Data 1</label>
-                    <input type="text" id="inputValue1" placeholder="Enter data...">
-                </div>
-                <div class="input-group">
-                    <label id="lblInput2" for="inputValue2">Data 2</label>
-                    <input type="text" id="inputValue2" placeholder="Enter data...">
-                </div>
+        </div>
+    </div>
 
-                <!-- SEKSYEN PENGESAHAN (DESIGN KEMAS & TERSUSUN) -->
-                <div class="signature-section">
-                    <div class="sig-header">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Manager's Confirmation </span>
-                    </div>
-                    <p class="sig-desc" id="authMessage">Confirm the manager's password to allow this record to be saved in the system.</p>
-                    
-                    <!-- Form Masukkan Password -->
-                    <div id="signatureForm" class="sig-form">
-                        <input type="password" id="managerPassword" placeholder="Passcode">
-                        <button type="button" class="btn-sig" onclick="verifyManager()">Comfirm</button>
-                    </div>
-
-                    <!-- Status Jika Berjaya -->
-                    <div id="signatureStatus" class="sig-status">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                        <span>Verified & Storable</span>
+    <!-- MODAL MANAGER VERIFICATION (Monthly) -->
+    <div class="modal-overlay" id="verifyMonthModal">
+        <div class="modal-box">
+            <div class="modal-topstripe" style="background: var(--ink);"></div>
+            <div class="modal-pad">
+                <div class="modal-header">
+                    <h3 style="color: var(--ink);">Manager Verification</h3>
+                    <p style="color: var(--ink-soft);">Verify this month's record.</p>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label>Enter Passcode</label>
+                        <input type="password" id="monthPasscode" placeholder="Passcode">
                     </div>
                 </div>
-
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn-danger" id="clearDataBtn" onclick="clearModalData()" disabled>Clear Data</button>
-                <div class="right-btns">
-                    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <!-- Butang ini akan 'disabled' selagi belum ada tandatangan -->
-                    <button class="btn-primary" id="saveDataBtn" onclick="saveModalData()" disabled>Save Data</button>
+                <div class="modal-footer" style="justify-content: flex-end;">
+                    <div class="right-btns">
+                        <button class="btn-cancel" onclick="closeVerifyMonthModal()">Cancel</button>
+                        <button class="btn-primary" onclick="confirmMonthVerification()" style="background: var(--ink);">Verify</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -395,42 +566,51 @@
     <script>
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const dayLetters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-        
+
+        const moduleMeta = {
+            reading: { title: 'Reading Book Record', color: '#4f46e5', soft: '#eef0fd' },
+            iqra:    { title: 'Iqra Recite Record',  color: '#b45309', soft: '#fdf2e3' },
+            tuition: { title: 'Tuition Record',      color: '#0f8a5f', soft: '#e7f7f0' }
+        };
+
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
-        if (currentYear < 2026) currentYear = 2026; 
+        if (currentYear < 2026) currentYear = 2026;
 
         let totalDays = 0;
-        let activeCell = null; 
-        let currentMode = 'reading'; 
+        let activeCell = null;
+        let currentMode = 'reading';
 
         // DATABASE (LOCAL STORAGE)
         let rawData = localStorage.getItem('studentSystemData');
         let appDatabase;
-        
+
         if (rawData) {
             appDatabase = JSON.parse(rawData);
+            
+            // Migration for older versions
             if (appDatabase.students && Array.isArray(appDatabase.students)) {
                 let oldStudents = appDatabase.students;
                 let oldRecords = appDatabase.records;
                 appDatabase = {
-                    teacherName: "",
+                    teacherName: appDatabase.teacherName || "",
                     reading: { students: oldStudents, records: oldRecords },
                     iqra: { students: [], records: {} },
-                    tuition: { students: [], records: {} } 
+                    tuition: { students: [], records: {} },
+                    verifiedMonths: { reading: {}, iqra: {}, tuition: {} }
                 };
                 saveToLocalStorage();
             }
-            if (!appDatabase.tuition) {
-                appDatabase.tuition = { students: [], records: {} };
-                saveToLocalStorage();
-            }
+            if (!appDatabase.tuition) appDatabase.tuition = { students: [], records: {} };
+            if (!appDatabase.verifiedMonths) appDatabase.verifiedMonths = { reading: {}, iqra: {}, tuition: {} };
+            saveToLocalStorage();
         } else {
             appDatabase = {
                 teacherName: "",
                 reading: { students: [], records: {} },
                 iqra: { students: [], records: {} },
-                tuition: { students: [], records: {} } 
+                tuition: { students: [], records: {} },
+                verifiedMonths: { reading: {}, iqra: {}, tuition: {} }
             };
         }
 
@@ -442,7 +622,7 @@
             if (!appDatabase.teacherName) {
                 document.getElementById('welcomeScreen').classList.add('active');
             } else {
-                showHomeScreen();
+                enterApp();
             }
         };
 
@@ -463,101 +643,170 @@
             appDatabase.teacherName = inputVal;
             saveToLocalStorage();
             document.getElementById('welcomeScreen').classList.remove('active');
-            showHomeScreen();
+            enterApp();
         }
 
-        function showHomeScreen() {
-            document.getElementById('welcomeScreen').classList.remove('active');
-            document.getElementById('appScreen').style.display = 'none';
-            document.getElementById('homeScreen').style.display = 'flex';
-            document.getElementById('welcomeHeader').innerText = `Welcome, ${appDatabase.teacherName}`;
+        function enterApp() {
+            document.getElementById('appShell').style.display = 'flex';
+
+            const teacherName = appDatabase.teacherName || 'Teacher';
+            document.getElementById('sidebarTeacherName').innerText = teacherName;
+
+            const namePart = teacherName.replace(/^Teacher\s*/i, '').trim();
+            document.getElementById('teacherAvatar').innerText = namePart ? namePart.charAt(0).toUpperCase() : 'T';
+
+            openApp(currentMode);
+        }
+
+        function toggleSidebar(open) {
+            document.getElementById('sidebar').classList.toggle('open', open);
+            document.getElementById('sidebarScrim').classList.toggle('active', open);
+        }
+
+        function applyModuleTheme(mode) {
+            const meta = moduleMeta[mode];
+            document.documentElement.style.setProperty('--module-color', meta.color);
+            document.documentElement.style.setProperty('--module-color-soft', meta.soft);
+            document.documentElement.style.setProperty('--accent', meta.color);
         }
 
         function openApp(mode) {
             currentMode = mode;
-            document.getElementById('homeScreen').style.display = 'none';
-            document.getElementById('appScreen').style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.mode === mode);
+            });
+            toggleSidebar(false);
+            applyModuleTheme(mode);
 
             const mainTitle = document.getElementById('mainAppTitle');
             const mainDesc = document.getElementById('mainAppDesc');
+            const mobileTitle = document.getElementById('mobileTopbarTitle');
+            const eyebrow = document.getElementById('moduleEyebrow');
             const lbl1 = document.getElementById('lblInput1');
             const lbl2 = document.getElementById('lblInput2');
 
             if(mode === 'reading') {
+                eyebrow.innerText = 'Reading Module';
                 mainTitle.innerText = "Reading Book Record";
                 mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
                 lbl1.innerText = "Pages Read (Numbers Only)";
                 lbl2.innerText = "Books Completed (Numbers Only)";
-                document.documentElement.style.setProperty('--primary', '#3b82f6');
-            } else if (mode === 'tuition') { 
+            } else if (mode === 'tuition') {
+                eyebrow.innerText = 'Tuition Module';
                 mainTitle.innerText = "Tuition Record";
                 mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
-                lbl1.innerText = "Subject / Subjek";
-                lbl2.innerText = "Score / Markah";
-                document.documentElement.style.setProperty('--primary', '#10b981'); 
+                lbl1.innerText = "Book";
+                lbl2.innerText = "Pages";
             } else {
+                eyebrow.innerText = 'Iqra Module';
                 mainTitle.innerText = "Iqra Recite Record";
                 mainDesc.innerText = `Class Record Managed by: ${appDatabase.teacherName}`;
-                lbl1.innerText = "Iqra Volume / Jilid (1-6)";
+                lbl1.innerText = "Iqra Volume (1-6)";
                 lbl2.innerText = "Page Number (Numbers Only)";
-                document.documentElement.style.setProperty('--primary', '#d97706'); 
             }
+            mobileTitle.innerText = mainTitle.innerText;
 
-            buildScrollPicker();
             updateDatePickerUI();
+            updateVerificationUI();
             generateGrid();
         }
 
-        function goHome() {
-            showHomeScreen();
+        function updateStatChips() {
+            document.getElementById('statStudentCount').innerText = appDatabase[currentMode].students.length;
+            document.getElementById('statPeriod').innerText = `${monthNames[currentMonth].substring(0,3)} ${currentYear}`;
+        }
+
+        function shiftMonth(delta) {
+            let m = currentMonth + delta;
+            let y = currentYear;
+            if (m < 0) { m = 11; y -= 1; }
+            if (m > 11) { m = 0; y += 1; }
+            if (y < 2026) return;
+            currentMonth = m;
+            currentYear = y;
+            updateDatePickerUI();
+            updateVerificationUI();
+            generateGrid();
+        }
+
+        // ================= MONTHLY VERIFICATION =================
+        function updateVerificationUI() {
+            const verifyGroup = document.getElementById('verifyGroup');
+            const verifyDivider = document.getElementById('verifyDivider');
+            
+            if (currentMode === 'tuition' || currentMode === 'iqra') {
+                verifyGroup.style.display = 'flex';
+                verifyDivider.style.display = 'block';
+                
+                const monthKey = `${currentYear}-${currentMonth}`;
+                const isVerified = appDatabase.verifiedMonths[currentMode] && appDatabase.verifiedMonths[currentMode][monthKey];
+                
+                if (isVerified) {
+                    document.getElementById('btnVerifyMonth').style.display = 'none';
+                    document.getElementById('verifiedBadge').style.display = 'flex';
+                } else {
+                    document.getElementById('btnVerifyMonth').style.display = 'flex';
+                    document.getElementById('verifiedBadge').style.display = 'none';
+                }
+            } else {
+                verifyGroup.style.display = 'none';
+                verifyDivider.style.display = 'none';
+            }
+        }
+
+        function openVerifyMonthModal() {
+            document.getElementById('monthPasscode').value = '';
+            document.getElementById('verifyMonthModal').classList.add('active');
+        }
+
+        function closeVerifyMonthModal() {
+            document.getElementById('verifyMonthModal').classList.remove('active');
+        }
+
+        function confirmMonthVerification() {
+            const passcode = document.getElementById('monthPasscode').value;
+            if (passcode === '139613') {
+                const monthKey = `${currentYear}-${currentMonth}`;
+                if (!appDatabase.verifiedMonths[currentMode]) {
+                    appDatabase.verifiedMonths[currentMode] = {};
+                }
+                appDatabase.verifiedMonths[currentMode][monthKey] = true;
+                saveToLocalStorage();
+                closeVerifyMonthModal();
+                updateVerificationUI();
+            } else {
+                alert('Invalid manager passcode! Please try again.');
+            }
         }
 
         function exportPDF() {
             const oldDesc = document.getElementById('mainAppDesc').innerText;
             const currentPeriod = document.getElementById('displayDate').innerText;
+            
+            // Set up digital signature for Tuition and Iqra
+            const sigDiv = document.getElementById('printSignature');
+            if (currentMode === 'tuition' || currentMode === 'iqra') {
+                const monthKey = `${currentYear}-${currentMonth}`;
+                const isVerified = appDatabase.verifiedMonths[currentMode] && appDatabase.verifiedMonths[currentMode][monthKey];
+                
+                if (isVerified) {
+                    sigDiv.innerHTML = `&#10003; DIGITAL SIGNATURE: VERIFIED BY MANAGER - ${currentPeriod.toUpperCase()}`;
+                    sigDiv.style.color = '#0f8a5f';
+                    sigDiv.style.borderColor = '#0f8a5f';
+                } else {
+                    sigDiv.innerHTML = `STATUS: PENDING MANAGER VERIFICATION - ${currentPeriod.toUpperCase()}`;
+                    sigDiv.style.color = '#e2483b';
+                    sigDiv.style.borderColor = '#e2483b';
+                }
+            } else {
+                sigDiv.innerHTML = '';
+                sigDiv.style.display = 'none';
+            }
+
             document.getElementById('mainAppDesc').innerText = `${oldDesc} | Period: ${currentPeriod}`;
             window.print();
             document.getElementById('mainAppDesc').innerText = oldDesc;
-        }
-
-        function toggleDatePicker(event) { document.getElementById('datePopover').classList.toggle('active'); }
-
-        document.addEventListener('click', function(event) {
-            const container = document.getElementById('datePickerContainer');
-            if (!container.contains(event.target)) { document.getElementById('datePopover').classList.remove('active'); }
-        });
-
-        function buildScrollPicker() {
-            const monthList = document.getElementById('monthScrollList');
-            const yearList = document.getElementById('yearScrollList');
-            monthList.innerHTML = '';
-            yearList.innerHTML = '';
-
-            monthNames.forEach((month, index) => {
-                let div = document.createElement('div');
-                div.className = `scroll-item ${index === currentMonth ? 'active' : ''}`;
-                div.innerText = month.substring(0, 3);
-                div.onclick = function() {
-                    currentMonth = index;
-                    buildScrollPicker();
-                    updateDatePickerUI();
-                    generateGrid();
-                };
-                monthList.appendChild(div);
-            });
-
-            for (let y = 2026; y <= 2035; y++) {
-                let div = document.createElement('div');
-                div.className = `scroll-item ${y === currentYear ? 'active' : ''}`;
-                div.innerText = y;
-                div.onclick = function() {
-                    currentYear = y;
-                    buildScrollPicker(); 
-                    updateDatePickerUI();
-                    generateGrid();
-                };
-                yearList.appendChild(div);
-            }
         }
 
         function updateDatePickerUI() {
@@ -578,7 +827,7 @@
 
             for (let i = 1; i <= totalDays; i++) {
                 let dateObj = new Date(currentYear, currentMonth, i);
-                let dayIndex = dateObj.getDay(); 
+                let dayIndex = dateObj.getDay();
                 let thDay = document.createElement('th');
                 thDay.innerHTML = `
                     <div class="header-day">
@@ -592,6 +841,8 @@
             appDatabase[currentMode].students.forEach(studentName => {
                 createStudentRow(studentName, tableBody);
             });
+
+            updateStatChips();
         }
 
         function addStudent() {
@@ -618,14 +869,24 @@
             }
         }
 
+        function getInitials(name) {
+            const parts = name.trim().split(/\s+/).filter(Boolean);
+            if (parts.length === 0) return '?';
+            if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+            return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        }
+
         function createStudentRow(studentName, tableBody) {
             const tr = document.createElement('tr');
             let tdName = document.createElement('td');
-            
+
             tdName.innerHTML = `
                 <div class="student-name-wrapper">
-                    <span>${studentName}</span>
-                    <button class="btn-delete-student" onclick="removeStudent('${studentName}')" title="Delete Student">×</button>
+                    <div class="student-chip">
+                        <div class="student-avatar">${getInitials(studentName)}</div>
+                        <span>${studentName}</span>
+                    </div>
+                    <button class="btn-delete-student" onclick="removeStudent('${studentName}')" title="Delete Student">&times;</button>
                 </div>
             `;
             tr.appendChild(tdName);
@@ -634,17 +895,15 @@
                 let tdDay = document.createElement('td');
                 let cellBtn = document.createElement('button');
                 cellBtn.className = 'cell-btn';
-                
+
                 const dateKey = `${currentYear}-${currentMonth}-${i}`;
-                
+
                 let val1 = '';
                 let val2 = '';
-                let isSigned = false;
-                
+
                 if (appDatabase[currentMode].records[studentName] && appDatabase[currentMode].records[studentName][dateKey]) {
                     val1 = appDatabase[currentMode].records[studentName][dateKey].val1 || '';
                     val2 = appDatabase[currentMode].records[studentName][dateKey].val2 || '';
-                    isSigned = appDatabase[currentMode].records[studentName][dateKey].isSigned || false;
                 }
 
                 cellBtn.dataset.student = studentName;
@@ -652,9 +911,8 @@
                 cellBtn.dataset.datekey = dateKey;
                 cellBtn.dataset.val1 = val1;
                 cellBtn.dataset.val2 = val2;
-                cellBtn.dataset.isSigned = isSigned;
 
-                renderCellBadges(cellBtn, val1, val2, isSigned);
+                renderCellBadges(cellBtn, val1, val2);
                 cellBtn.onclick = function() { openModal(this); };
                 tdDay.appendChild(cellBtn);
                 tr.appendChild(tdDay);
@@ -662,25 +920,21 @@
             tableBody.appendChild(tr);
         }
 
-        function renderCellBadges(cellBtn, val1, val2, isSigned = false) {
-            cellBtn.innerHTML = ''; 
+        function renderCellBadges(cellBtn, val1, val2) {
+            cellBtn.innerHTML = '';
             if (currentMode === 'reading') {
-                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="color: #2563eb;">P: ${val1}</div>`;
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="color: #4338ca;">P: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge books" style="background:#d1fae5; color: #059669;">B: ${val2}</div>`;
-            } else if (currentMode === 'tuition') { 
+            } else if (currentMode === 'tuition') {
                 if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#d1fae5; color:#059669;">Sub: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fce7f3; color:#be185d;">Mk: ${val2}</div>`;
             } else {
-                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#d97706;">Vol: ${val1}</div>`;
+                if(val1 && val1 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#fef3c7; color:#b45309;">Vol: ${val1}</div>`;
                 if(val2 && val2 !== '') cellBtn.innerHTML += `<div class="data-badge" style="background:#e0e7ff; color:#4338ca;">Pg: ${val2}</div>`;
-            }
-            
-            if (isSigned === true || isSigned === 'true') {
-                cellBtn.innerHTML += `<div class="data-badge" style="background:#dcfce7; color:#166534; border: 1px solid #166534; margin-top: 3px;">✍️ Verify</div>`;
             }
         }
 
-        // ================= KAWALAN PENGESAHAN KEMAS KINI =================
+        // ================= DATA ENTRY =================
         function openModal(buttonElement) {
             activeCell = buttonElement;
             const student = activeCell.dataset.student;
@@ -689,57 +943,14 @@
 
             document.getElementById('modalStudentName').innerText = student;
             document.getElementById('modalDateInfo').innerText = fullDateStr;
-            
+
             const input1 = document.getElementById('inputValue1');
             const input2 = document.getElementById('inputValue2');
-            const saveBtn = document.getElementById('saveDataBtn');
-            const clearBtn = document.getElementById('clearDataBtn');
-            const authMessage = document.getElementById('authMessage');
 
             input1.value = activeCell.dataset.val1;
             input2.value = activeCell.dataset.val2;
 
-            const isSigned = activeCell.dataset.isSigned === 'true';
-            document.getElementById('managerPassword').value = ''; 
-            
-            // JIKA SUDAH DISAHKAN SEBELUM INI: Buka ruangan butang save
-            if (isSigned) {
-                document.getElementById('signatureStatus').style.display = 'flex';
-                document.getElementById('signatureForm').style.display = 'none';
-                authMessage.style.display = 'none';
-                
-                saveBtn.disabled = false;
-                clearBtn.disabled = false;
-            } 
-            // JIKA BELUM DISAHKAN: Kunci butang save sahaja, input boleh diisi
-            else {
-                document.getElementById('signatureStatus').style.display = 'none';
-                document.getElementById('signatureForm').style.display = 'flex';
-                authMessage.style.display = 'block';
-
-                saveBtn.disabled = true;
-                clearBtn.disabled = true;
-            }
-
             document.getElementById('dataModal').classList.add('active');
-        }
-
-        function verifyManager() {
-            const passInput = document.getElementById('managerPassword').value;
-            if (passInput === '139613') {
-                document.getElementById('signatureStatus').style.display = 'flex';
-                document.getElementById('signatureForm').style.display = 'none';
-                document.getElementById('authMessage').style.display = 'none';
-                
-                if (activeCell) activeCell.dataset.isSigned = 'true';
-
-                // Buka kunci (Unlock) butang selepas disahkan
-                document.getElementById('saveDataBtn').disabled = false;
-                document.getElementById('clearDataBtn').disabled = false;
-
-            } else {
-                alert('Kata laluan pengurus salah! Sila cuba lagi.');
-            }
         }
 
         function closeModal() { document.getElementById('dataModal').classList.remove('active'); activeCell = null; }
@@ -750,16 +961,15 @@
             const dateKey = activeCell.dataset.datekey;
             const val1 = document.getElementById('inputValue1').value;
             const val2 = document.getElementById('inputValue2').value;
-            const isSigned = activeCell.dataset.isSigned === 'true';
 
             activeCell.dataset.val1 = val1;
             activeCell.dataset.val2 = val2;
 
             if (!appDatabase[currentMode].records[student]) appDatabase[currentMode].records[student] = {};
-            appDatabase[currentMode].records[student][dateKey] = { val1: val1, val2: val2, isSigned: isSigned };
+            appDatabase[currentMode].records[student][dateKey] = { val1: val1, val2: val2 };
             saveToLocalStorage();
 
-            renderCellBadges(activeCell, val1, val2, isSigned);
+            renderCellBadges(activeCell, val1, val2);
             closeModal();
         }
 
@@ -775,9 +985,8 @@
 
             activeCell.dataset.val1 = '';
             activeCell.dataset.val2 = '';
-            activeCell.dataset.isSigned = 'false';
-            
-            renderCellBadges(activeCell, '', '', false);
+
+            renderCellBadges(activeCell, '', '');
             closeModal();
         }
     </script>
